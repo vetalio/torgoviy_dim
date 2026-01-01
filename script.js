@@ -1,34 +1,35 @@
 // Глобальні налаштування
 const FORM_GENERATOR_URL = 'https://veo-optimization.github.io/mini-site/assets/form-generator.html';
 
-// Функція для форматування номера
+// Функція форматування номера телефону
 function formatPhoneNumber(phoneNumber) {
-    if (phoneNumber && phoneNumber.length === 10 && phoneNumber.startsWith('0')) {
+    if (!phoneNumber) return '';
+    if (phoneNumber.length === 10 && phoneNumber.startsWith('0')) {
         return "+380" + phoneNumber.substring(1);
     }
-    return phoneNumber || '';
+    return phoneNumber;
 }
 
-// Функція для створення Viber URL
+// Створення Viber-посилання
 function createViberUrl(phoneNumber) {
     const formattedNumber = formatPhoneNumber(phoneNumber);
     return `viber://chat?number=${encodeURIComponent(formattedNumber)}`;
 }
 
-// Основна функція копіювання в буфер
+// Основна функція копіювання
 function copyToClipboard(text, buttonId, successMessage = '✓ Скопійовано!', skipButtonChange = false) {
     if (!text) return;
-    
+
     navigator.clipboard.writeText(text).then(() => {
         if (skipButtonChange) return;
-        
+
         const button = document.getElementById(buttonId);
         if (!button) return;
 
         const originalHTML = button.innerHTML;
         const originalBackground = button.style.background || '';
         const originalColor = button.style.color || '';
-        
+
         const computedStyle = window.getComputedStyle(button);
         const originalWidth = computedStyle.width;
         const originalHeight = computedStyle.height;
@@ -40,7 +41,7 @@ function copyToClipboard(text, buttonId, successMessage = '✓ Скопійов�
         button.innerHTML = successMessage;
         button.style.background = '#2196F3';
         button.style.color = '#ffffff';
-        
+
         button.style.width = originalWidth;
         button.style.height = originalHeight;
         button.style.minWidth = originalMinWidth;
@@ -65,22 +66,22 @@ function copyToClipboard(text, buttonId, successMessage = '✓ Скопійов�
     });
 }
 
-// === Функції копіювання реквізитів ===
+// === Усі функції копіювання ===
 function copyIBAN() {
     if (typeof IBAN !== 'undefined' && IBAN) {
-        copyToClipboard(IBAN, 'copyIbanButton', '✓ IBAN скопійовано');
+        copyToClipboard(IBAN.trim(), 'copyIbanButton', '✓ IBAN скопійовано');
     }
 }
 
 function copyEDRPOU() {
     if (typeof EDRPOU !== 'undefined' && EDRPOU) {
-        copyToClipboard(EDRPOU, 'copyEdrpouButton', '✓ ЄДРПОУ скопійовано');
+        copyToClipboard(EDRPOU.trim(), 'copyEdrpouButton', '✓ ЄДРПОУ скопійовано');
     }
 }
 
 function copyPaymentPurpose() {
     if (typeof PAYMENT_PURPOSE !== 'undefined' && PAYMENT_PURPOSE) {
-        copyToClipboard(PAYMENT_PURPOSE, 'copyPurposeButton', '✓ Призначення скопійовано');
+        copyToClipboard(PAYMENT_PURPOSE.trim(), 'copyPurposeButton', '✓ Призначення скопійовано');
     }
 }
 
@@ -93,36 +94,47 @@ function copyCardNumber() {
 
 function copyCardHolder() {
     if (typeof CARD_HOLDER_NAME !== 'undefined' && CARD_HOLDER_NAME) {
-        copyToClipboard(CARD_HOLDER_NAME, 'copyCardHolderButton', '✓ Прізвище скопійовано');
+        copyToClipboard(CARD_HOLDER_NAME.trim(), 'copyCardHolderButton', '✓ Прізвище скопійовано');
     }
 }
 
 function copyCardBank() {
     if (typeof CARD_BANK_NAME !== 'undefined' && CARD_BANK_NAME) {
-        copyToClipboard(CARD_BANK_NAME, 'copyCardBankButton', '✓ Назва банку скопійовано');
+        copyToClipboard(CARD_BANK_NAME.trim(), 'copyCardBankButton', '✓ Назва банку скопійовано');
     }
 }
 
-// Спеціальна функція для шаблону після оплати (з fallback)
+// Копіювання шаблону після оплати — ВАЖЛИВО: з переносами рядків
 function copyPaymentTemplate() {
-    let templateText = window.AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE || '';
-    
+    let templateText = '';
+
+    // Спочатку беремо з глобальної змінної (зберігає \n)
+    if (typeof AFTER_PAYMENT_TEMPLATE !== 'undefined' && AFTER_PAYMENT_TEMPLATE) {
+        templateText = AFTER_PAYMENT_TEMPLATE;
+    } else if (typeof window.AFTER_PAYMENT_TEMPLATE !== 'undefined' && window.AFTER_PAYMENT_TEMPLATE) {
+        templateText = window.AFTER_PAYMENT_TEMPLATE;
+    }
+
+    // Якщо не знайшли — беремо з DOM (textContent зберігає переноси)
     if (!templateText) {
         const el = document.getElementById('paymentTemplateDisplay');
-        if (el) templateText = el.textContent || el.innerText || '';
+        if (el) {
+            templateText = el.textContent || el.innerText || '';
+        }
     }
-    
+
     if (!templateText) {
         alert('Шаблон порожній');
         return;
     }
-    
+
+    // Замінюємо екрановані \n на справжні переноси
     templateText = templateText.replace(/\\n/g, '\n');
-    
+
     copyToClipboard(templateText, 'copyTemplateButton', '✓ Шаблон скопійовано');
 }
 
-// === Соцмережі та контакти ===
+// Соцмережі
 function copyTelegramUsername() {
     if (typeof TELEGRAM_PHONE !== 'undefined' && TELEGRAM_PHONE) {
         const phone = formatPhoneNumber(TELEGRAM_PHONE);
@@ -137,20 +149,18 @@ function copyTelegramUsername() {
 function copyViberPhone(phone, index) {
     const phoneToCopy = phone || VIBER_PHONE;
     if (!phoneToCopy) return;
-    const formattedNumber = formatPhoneNumber(phoneToCopy);
+    const formatted = formatPhoneNumber(phoneToCopy);
     const buttonId = index !== undefined ? `copyViberPhoneButton${index}` : 'copyViberPhoneButton';
     const badgeId = index !== undefined ? `viberCopyBadge${index}` : 'viberCopyBadge';
-    copyToClipboard(formattedNumber, buttonId, '', true);
+    copyToClipboard(formatted, buttonId, '', true);
     showCopySuccess(badgeId);
 }
 
 function copyTelegramShowcase() {
     if (!TELEGRAM_SHOWCASE) return;
     const link = getTelegramShowcaseLink();
-    if (link) {
-        copyToClipboard(link, 'copyTelegramShowcaseButton', '', true);
-        showCopySuccess('showcaseCopyBadge');
-    }
+    copyToClipboard(link, 'copyTelegramShowcaseButton', '', true);
+    showCopySuccess('showcaseCopyBadge');
 }
 
 function copyInstagramUsername() {
@@ -161,8 +171,8 @@ function copyInstagramUsername() {
 
 function copyBiggoLive() {
     if (!BIGGO_LIVE_URL) return;
-    const fullUrl = getBiggoLiveUrl();
-    copyToClipboard(fullUrl, 'copyBiggoLiveButton', '', true);
+    const url = getBiggoLiveUrl();
+    copyToClipboard(url, 'copyBiggoLiveButton', '', true);
     showCopySuccess('biggoLiveCopyBadge');
 }
 
@@ -174,28 +184,27 @@ function showCopySuccess(badgeId) {
     }
 }
 
-// === Решта функцій (модалки, відкриття посилань, календар тощо) ===
-let currentContactData = null;
+// === Решта функцій (модалки, відкриття месенджерів, календар тощо) ===
+// Вставте сюди весь інший код з оригінального файлу:
+// - showContactModal, closeContactModal, modalCopyContact, modalOpenContact
+// - openTelegram, openViber, openInstagram, openBiggoLive
+// - функції для Biggo (getBiggoLiveUsername, getBiggoLiveUrl)
+// - весь код календаря (extractCalendarId → generatePublicOffer)
+// - великий блок в DOMContentLoaded з заповненням полів
 
-// [Тут вставте весь інший код з попередньої версії: 
-// showContactModal, closeContactModal, modalCopyContact, modalOpenContact,
-// openTelegram, openViber, всі функції для Biggo, Instagram, календар і т.д.]
-
-// Важливо: залиште функції нижче без змін
-function openTelegram() { /* ... як раніше ... */ }
-function openViber(phone) { /* ... як раніше ... */ }
-// ... всі інші функції (getBiggoLiveUsername, календар, generatePublicOffer тощо)
-
-// Ініціалізація
+// Приклад (скорочено):
 document.addEventListener('DOMContentLoaded', function() {
-    // Обробка CLIENT_CONSTANTS (якщо є)
-    if (typeof CLIENT_CONSTANTS !== 'undefined' && CLIENT_CONSTANTS?.trim()) {
-        if (typeof processClientData === 'function') processClientData();
-    }
-
     setTimeout(() => {
-        // Тут весь код заповнення полів (shopName, IBAN, контакти тощо) — залиште як був
-        // ... (той великий блок з document.getElementById і т.д.)
+        // Заповнення всіх полів на сторінці (shopName, fopName, ibanValue тощо)
+        // ... ваш оригінальний код заповнення ...
+
+        // Особливо важливо: шаблон після оплати
+        const templateDisplay = document.getElementById('paymentTemplateDisplay');
+        if (templateDisplay && (AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE)) {
+            const text = (AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE || '');
+            templateDisplay.textContent = text;
+            templateDisplay.style.whiteSpace = 'pre-line';
+        }
 
         generatePublicOffer();
 
