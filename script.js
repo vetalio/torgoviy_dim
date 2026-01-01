@@ -1,7 +1,7 @@
 // Глобальні налаштування
 const FORM_GENERATOR_URL = 'https://veo-optimization.github.io/mini-site/assets/form-generator.html';
 
-// Функція форматування номера телефону
+// Форматування номера телефону
 function formatPhoneNumber(phoneNumber) {
     if (!phoneNumber) return '';
     if (phoneNumber.length === 10 && phoneNumber.startsWith('0')) {
@@ -10,10 +10,10 @@ function formatPhoneNumber(phoneNumber) {
     return phoneNumber;
 }
 
-// Створення Viber-посилання
+// Viber URL
 function createViberUrl(phoneNumber) {
-    const formattedNumber = formatPhoneNumber(phoneNumber);
-    return `viber://chat?number=${encodeURIComponent(formattedNumber)}`;
+    const formatted = formatPhoneNumber(phoneNumber);
+    return `viber://chat?number=${encodeURIComponent(formatted)}`;
 }
 
 // Основна функція копіювання
@@ -27,16 +27,16 @@ function copyToClipboard(text, buttonId, successMessage = '✓ Скопійов�
         if (!button) return;
 
         const originalHTML = button.innerHTML;
-        const originalBackground = button.style.background || '';
+        const originalBg = button.style.background || '';
         const originalColor = button.style.color || '';
 
-        const computedStyle = window.getComputedStyle(button);
-        const originalWidth = computedStyle.width;
-        const originalHeight = computedStyle.height;
-        const originalMinWidth = computedStyle.minWidth;
-        const originalMinHeight = computedStyle.minHeight;
-        const originalPadding = computedStyle.padding;
-        const originalBoxSizing = computedStyle.boxSizing;
+        const style = window.getComputedStyle(button);
+        const originalWidth = style.width;
+        const originalHeight = style.height;
+        const originalMinWidth = style.minWidth;
+        const originalMinHeight = style.minHeight;
+        const originalPadding = style.padding;
+        const originalBoxSizing = style.boxSizing;
 
         button.innerHTML = successMessage;
         button.style.background = '#2196F3';
@@ -51,7 +51,7 @@ function copyToClipboard(text, buttonId, successMessage = '✓ Скопійов�
 
         setTimeout(() => {
             button.innerHTML = originalHTML;
-            button.style.background = originalBackground;
+            button.style.background = originalBg;
             button.style.color = originalColor;
             button.style.width = '';
             button.style.height = '';
@@ -60,99 +60,86 @@ function copyToClipboard(text, buttonId, successMessage = '✓ Скопійов�
             button.style.padding = '';
             button.style.boxSizing = '';
         }, 2000);
-    }).catch(err => {
-        console.error('Помилка копіювання:', err);
+    }).catch(() => {
         alert('Не вдалося скопіювати');
     });
 }
 
-// === Усі функції копіювання ===
+// === Копіювання реквізитів ===
 function copyIBAN() {
-    if (typeof IBAN !== 'undefined' && IBAN) {
-        copyToClipboard(IBAN.trim(), 'copyIbanButton', '✓ IBAN скопійовано');
-    }
+    if (IBAN) copyToClipboard(IBAN.trim(), 'copyIbanButton', '✓ IBAN скопійовано');
 }
 
 function copyEDRPOU() {
-    if (typeof EDRPOU !== 'undefined' && EDRPOU) {
-        copyToClipboard(EDRPOU.trim(), 'copyEdrpouButton', '✓ ЄДРПОУ скопійовано');
-    }
+    if (EDRPOU) copyToClipboard(EDRPOU.trim(), 'copyEdrpouButton', '✓ ЄДРПОУ скопійовано');
 }
 
 function copyPaymentPurpose() {
-    if (typeof PAYMENT_PURPOSE !== 'undefined' && PAYMENT_PURPOSE) {
-        copyToClipboard(PAYMENT_PURPOSE.trim(), 'copyPurposeButton', '✓ Призначення скопійовано');
-    }
+    if (PAYMENT_PURPOSE) copyToClipboard(PAYMENT_PURPOSE.trim(), 'copyPurposeButton', '✓ Призначення скопійовано');
 }
 
 function copyCardNumber() {
-    if (typeof CARD_NUMBER !== 'undefined' && CARD_NUMBER) {
-        const cleanNumber = CARD_NUMBER.replace(/\s/g, '');
-        copyToClipboard(cleanNumber, 'copyCardNumberButton', '✓ Номер картки скопійовано');
+    if (CARD_NUMBER) {
+        const clean = CARD_NUMBER.replace(/\s/g, '');
+        copyToClipboard(clean, 'copyCardNumberButton', '✓ Номер картки скопійовано');
     }
 }
 
 function copyCardHolder() {
-    if (typeof CARD_HOLDER_NAME !== 'undefined' && CARD_HOLDER_NAME) {
-        copyToClipboard(CARD_HOLDER_NAME.trim(), 'copyCardHolderButton', '✓ Прізвище скопійовано');
-    }
+    if (CARD_HOLDER_NAME) copyToClipboard(CARD_HOLDER_NAME.trim(), 'copyCardHolderButton', '✓ Прізвище скопійовано');
 }
 
 function copyCardBank() {
-    if (typeof CARD_BANK_NAME !== 'undefined' && CARD_BANK_NAME) {
-        copyToClipboard(CARD_BANK_NAME.trim(), 'copyCardBankButton', '✓ Назва банку скопійовано');
-    }
+    if (CARD_BANK_NAME) copyToClipboard(CARD_BANK_NAME.trim(), 'copyCardBankButton', '✓ Назва банку скопійовано');
 }
 
-// Копіювання шаблону після оплати — ВАЖЛИВО: з переносами рядків
+// КРИТИЧНО ВИПРАВЛЕНА функція — тепер копіює саме той текст, що видно користувачу
 function copyPaymentTemplate() {
-    let templateText = '';
+    const displayElement = document.getElementById('paymentTemplateDisplay');
+    let textToCopy = '';
 
-    // Спочатку беремо з глобальної змінної (зберігає \n)
-    if (typeof AFTER_PAYMENT_TEMPLATE !== 'undefined' && AFTER_PAYMENT_TEMPLATE) {
-        templateText = AFTER_PAYMENT_TEMPLATE;
-    } else if (typeof window.AFTER_PAYMENT_TEMPLATE !== 'undefined' && window.AFTER_PAYMENT_TEMPLATE) {
-        templateText = window.AFTER_PAYMENT_TEMPLATE;
+    if (displayElement) {
+        // Беремо textContent — він зберігає переноси рядків найкраще
+        textToCopy = displayElement.textContent || displayElement.innerText || '';
     }
 
-    // Якщо не знайшли — беремо з DOM (textContent зберігає переноси)
-    if (!templateText) {
-        const el = document.getElementById('paymentTemplateDisplay');
-        if (el) {
-            templateText = el.textContent || el.innerText || '';
-        }
+    // Запасний варіант — з глобальної змінної (якщо DOM ще не заповнений)
+    if (!textToCopy && typeof AFTER_PAYMENT_TEMPLATE !== 'undefined') {
+        textToCopy = AFTER_PAYMENT_TEMPLATE;
     }
 
-    if (!templateText) {
+    if (!textToCopy) {
         alert('Шаблон порожній');
         return;
     }
 
-    // Замінюємо екрановані \n на справжні переноси
-    templateText = templateText.replace(/\\n/g, '\n');
+    // Замінюємо можливі екрановані переноси
+    textToCopy = textToCopy.replace(/\\n/g, '\n');
 
-    copyToClipboard(templateText, 'copyTemplateButton', '✓ Шаблон скопійовано');
+    copyToClipboard(textToCopy, 'copyTemplateButton', '✓ Шаблон скопійовано');
 }
 
-// Соцмережі
+// === Соцмережі ===
 function copyTelegramUsername() {
-    if (typeof TELEGRAM_PHONE !== 'undefined' && TELEGRAM_PHONE) {
-        const phone = formatPhoneNumber(TELEGRAM_PHONE);
-        copyToClipboard(phone, 'copyTelegramButton', '', true);
-        showCopySuccess('telegramCopyBadge');
-    } else if (typeof TELEGRAM_USERNAME !== 'undefined' && TELEGRAM_USERNAME) {
-        copyToClipboard('@' + TELEGRAM_USERNAME, 'copyTelegramButton', '', true);
+    let text = '';
+    if (TELEGRAM_PHONE) {
+        text = formatPhoneNumber(TELEGRAM_PHONE);
+    } else if (TELEGRAM_USERNAME) {
+        text = '@' + TELEGRAM_USERNAME;
+    }
+    if (text) {
+        copyToClipboard(text, 'copyTelegramButton', '', true);
         showCopySuccess('telegramCopyBadge');
     }
 }
 
 function copyViberPhone(phone, index) {
-    const phoneToCopy = phone || VIBER_PHONE;
-    if (!phoneToCopy) return;
-    const formatted = formatPhoneNumber(phoneToCopy);
-    const buttonId = index !== undefined ? `copyViberPhoneButton${index}` : 'copyViberPhoneButton';
+    const p = phone || VIBER_PHONE;
+    if (!p) return;
+    const formatted = formatPhoneNumber(p);
+    const btnId = index !== undefined ? `copyViberPhoneButton${index}` : 'copyViberPhoneButton';
     const badgeId = index !== undefined ? `viberCopyBadge${index}` : 'viberCopyBadge';
-    copyToClipboard(formatted, buttonId, '', true);
+    copyToClipboard(formatted, btnId, '', true);
     showCopySuccess(badgeId);
 }
 
@@ -164,16 +151,18 @@ function copyTelegramShowcase() {
 }
 
 function copyInstagramUsername() {
-    if (!INSTAGRAM_USERNAME) return;
-    copyToClipboard('@' + INSTAGRAM_USERNAME, 'copyInstagramButton', '', true);
-    showCopySuccess('instagramCopyBadge');
+    if (INSTAGRAM_USERNAME) {
+        copyToClipboard('@' + INSTAGRAM_USERNAME, 'copyInstagramButton', '', true);
+        showCopySuccess('instagramCopyBadge');
+    }
 }
 
 function copyBiggoLive() {
-    if (!BIGGO_LIVE_URL) return;
-    const url = getBiggoLiveUrl();
-    copyToClipboard(url, 'copyBiggoLiveButton', '', true);
-    showCopySuccess('biggoLiveCopyBadge');
+    if (BIGGO_LIVE_URL) {
+        const url = getBiggoLiveUrl();
+        copyToClipboard(url, 'copyBiggoLiveButton', '', true);
+        showCopySuccess('biggoLiveCopyBadge');
+    }
 }
 
 function showCopySuccess(badgeId) {
@@ -184,26 +173,23 @@ function showCopySuccess(badgeId) {
     }
 }
 
-// === Решта функцій (модалки, відкриття месенджерів, календар тощо) ===
-// Вставте сюди весь інший код з оригінального файлу:
-// - showContactModal, closeContactModal, modalCopyContact, modalOpenContact
-// - openTelegram, openViber, openInstagram, openBiggoLive
-// - функції для Biggo (getBiggoLiveUsername, getBiggoLiveUrl)
-// - весь код календаря (extractCalendarId → generatePublicOffer)
-// - великий блок в DOMContentLoaded з заповненням полів
+// === Решта функцій (модалки, відкриття, календар тощо) ===
+// Вставте сюди весь інший оригінальний код:
+// showContactModal, closeContactModal, modalCopyContact, modalOpenContact,
+// openTelegram, openViber, openInstagram, openBiggoLive,
+// функції Biggo, весь календар, generatePublicOffer тощо.
 
-// Приклад (скорочено):
-document.addEventListener('DOMContentLoaded', function() {
+// Ініціалізація (залиште як було, тільки без перевірок безпеки)
+document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        // Заповнення всіх полів на сторінці (shopName, fopName, ibanValue тощо)
-        // ... ваш оригінальний код заповнення ...
+        // Весь ваш код заповнення полів (shopName, ibanValue, контакти тощо)
 
-        // Особливо важливо: шаблон після оплати
-        const templateDisplay = document.getElementById('paymentTemplateDisplay');
-        if (templateDisplay && (AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE)) {
-            const text = (AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE || '');
-            templateDisplay.textContent = text;
-            templateDisplay.style.whiteSpace = 'pre-line';
+        // Особливо важливо для шаблону:
+        const templateEl = document.getElementById('paymentTemplateDisplay');
+        if (templateEl && (AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE)) {
+            const text = AFTER_PAYMENT_TEMPLATE || window.AFTER_PAYMENT_TEMPLATE || '';
+            templateEl.textContent = text;
+            templateEl.style.whiteSpace = 'pre-line';
         }
 
         generatePublicOffer();
