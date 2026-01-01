@@ -445,26 +445,6 @@ function checkSecurity() {
     }
 }
 
-// Блокування сторінки
-function blockPage() {
-    // Блокуємо всі функції
-    window.copyToClipboard = function() { return false; };
-    window.openTelegram = function() { return false; };
-    window.openViber = function() { return false; };
-    window.copyIBAN = function() { return false; };
-    window.copyEDRPOU = function() { return false; };
-    window.copyPaymentPurpose = function() { return false; };
-    window.copyCardNumber = function() { return false; };
-    window.copyCardHolder = function() { return false; };
-    window.copyCardBank = function() { return false; };
-    window.copyTelegramUsername = function() { return false; };
-    window.copyViberPhone = function() { return false; };
-    window.openTelegramShowcase = function() { return false; };
-    window.copyTelegramShowcase = function() { return false; };
-    window.openInstagram = function() { return false; };
-    window.copyInstagramUsername = function() { return false; };    
-}
-
 // Перевірка безпеки перед виконанням функцій
 function secureCopy(text, buttonId, successMessage, skipButtonChange) {
     if (!checkSecurity()) return;
