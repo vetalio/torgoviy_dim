@@ -388,63 +388,6 @@ function showCopySuccess(badgeId) {
     }
 }
 
-// ============================================
-// СИСТЕМА ЗАХИСТУ КОДУ
-// ============================================
-
-// Функція перевірки безпеки
-function checkSecurity() {
-    try {
-        // Перевірка footer
-        const footerCredit = document.getElementById('footerCreditBlock');
-        if (!footerCredit || footerCredit.offsetParent === null) {
-            blockPage();
-            return false;
-        }
-        
-        // Перевірка наявності тексту про автора
-        const footerText = footerCredit.textContent || '';
-        const currentYear = new Date().getFullYear().toString();
-        if (!footerText.includes('VEO FORCE') || !footerText.includes(currentYear)) {
-            blockPage();
-            return false;
-        }
-        
-        // Перевірка якорів
-        const anchors = [
-            'veoAnchor1', 'veoAnchor2', 'veoAnchor3', 
-            'veoAnchor4', 'veoAnchor5', 'veoAnchor6'
-        ];
-        
-        for (let i = 0; i < anchors.length; i++) {
-            const anchor = document.getElementById(anchors[i]);
-            if (!anchor) {
-                blockPage();
-                return false;
-            }
-            
-            // Перевірка тексту якоря
-            const anchorText = anchor.textContent || anchor.innerText || '';
-            if (anchorText.trim() !== 'VEO FORCE') {
-                blockPage();
-                return false;
-            }
-            
-            // Перевірка, що елемент не прихований через display:none
-            const style = window.getComputedStyle(anchor);
-            if (style.display === 'none' || style.visibility === 'hidden') {
-                blockPage();
-                return false;
-            }
-        }
-        
-        return true;
-    } catch (e) {
-        blockPage();
-        return false;
-    }
-}
-
 // Перевірка безпеки перед виконанням функцій
 function secureCopy(text, buttonId, successMessage, skipButtonChange) {
     if (!checkSecurity()) return;
