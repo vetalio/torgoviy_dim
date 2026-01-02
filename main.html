@@ -195,7 +195,6 @@
         }
         .content { padding: 32px 16px; }
 
-        /* Кожен блок тепер сильніше виділений */
         .block-card {
             background: #FFFFFF;
             border-radius: 24px;
@@ -208,12 +207,28 @@
             font-family: 'Playfair Display', serif;
             font-size: 26px;
             color: #2c5282;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             display: flex;
             align-items: center;
             gap: 12px;
             padding-bottom: 12px;
             border-bottom: 3px solid #6FA8DC;
+        }
+
+        .sub-block {
+            background: #f8fbff;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #c0d8ec;
+            box-shadow: 0 4px 16px rgba(111,168,220,0.1);
+        }
+        .sub-title {
+            font-size: 20px;
+            color: #2c5282;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
         }
 
         .fop-info {
@@ -457,8 +472,8 @@
 
         @media (max-width: 480px) {
             .block-title { font-size: 24px; }
+            .sub-title { font-size: 19px; }
             .contact-value { font-size: 22px; }
-            .contact-action-btn { width: 64px; height: 64px; font-size: 28px; }
         }
     </style>
 </head>
@@ -471,40 +486,46 @@
 
         <div class="content">
 
-            <!-- Блок 1: Реквізити -->
+            <!-- Блок 1: Реквізити для оплати -->
             <div class="block-card">
                 <div class="block-title">💳 Реквізити для оплати</div>
                 <div class="fop-info">
                     <div class="fop-name" id="fopName"></div>
                 </div>
 
-                <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Оплата за номером карти</h3>
-                <div class="data-block">
-                    <div class="data-label">Номер карти (Монобанк):</div>
-                    <div class="data-value" id="cardNumberValue"></div>
-                    <button class="copy-button" onclick="copyCardNumber()">Скопіювати номер карти</button>
-                </div>
-                <div class="data-block">
-                    <div class="data-label">Призначення платежу:</div>
-                    <div class="data-value" id="paymentPurposeCardValue"></div>
-                    <button class="copy-button" onclick="copyPaymentPurposeCard()">Скопіювати</button>
+                <!-- Підблок: Оплата за номером карти -->
+                <div class="sub-block">
+                    <div class="sub-title">Оплата за номером карти (Монобанк)</div>
+                    <div class="data-block">
+                        <div class="data-label">Номер карти:</div>
+                        <div class="data-value" id="cardNumberValue"></div>
+                        <button class="copy-button" onclick="copyCardNumber()">Скопіювати номер</button>
+                    </div>
+                    <div class="data-block">
+                        <div class="data-label">Призначення платежу:</div>
+                        <div class="data-value" id="paymentPurposeCardValue"></div>
+                        <button class="copy-button" onclick="copyPaymentPurposeCard()">Скопіювати</button>
+                    </div>
                 </div>
 
-                <h3 style="color: #2c5282; margin: 32px 0 16px; font-size: 18px;">Оплата за реквізитами</h3>
-                <div class="data-block">
-                    <div class="data-label">IBAN (<span id="bankName"></span>):</div>
-                    <div class="data-value" id="ibanValue"></div>
-                    <button class="copy-button" onclick="copyIBAN()">Скопіювати IBAN</button>
-                </div>
-                <div class="data-block">
-                    <div class="data-label">ЄДРПОУ:</div>
-                    <div class="data-value" id="edrpouValue"></div>
-                    <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
-                </div>
-                <div class="data-block">
-                    <div class="data-label">Призначення платежу:</div>
-                    <div class="data-value" id="paymentPurposeValue"></div>
-                    <button class="copy-button" onclick="copyPaymentPurpose()">Скопіювати</button>
+                <!-- Підблок: Оплата за реквізитами -->
+                <div class="sub-block">
+                    <div class="sub-title">Оплата за реквізитами</div>
+                    <div class="data-block">
+                        <div class="data-label">IBAN (<span id="bankName"></span>):</div>
+                        <div class="data-value" id="ibanValue"></div>
+                        <button class="copy-button" onclick="copyIBAN()">Скопіювати IBAN</button>
+                    </div>
+                    <div class="data-block">
+                        <div class="data-label">ЄДРПОУ:</div>
+                        <div class="data-value" id="edrpouValue"></div>
+                        <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
+                    </div>
+                    <div class="data-block">
+                        <div class="data-label">Призначення платежу:</div>
+                        <div class="data-value" id="paymentPurposeValue"></div>
+                        <button class="copy-button" onclick="copyPaymentPurpose()">Скопіювати</button>
+                    </div>
                 </div>
             </div>
 
@@ -522,7 +543,7 @@
                 </div>
             </div>
 
-            <!-- Блок 3: Зв'язок з нами (тільки Вайбер) -->
+            <!-- Блок 3: Зв'язок з нами -->
             <div class="block-card">
                 <div class="block-title">📞 Зв'язок з нами</div>
                 <div class="tiktok-instruction">
@@ -576,7 +597,6 @@
         </div>
     </div>
 
-    <!-- Модальне вікно (тільки для Вайбера) -->
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
