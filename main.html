@@ -22,7 +22,6 @@
         const PAYMENT_PURPOSE = "Оплата за товари";
         const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
-        const PHONE_FOR_CALL = "0687005650";
         const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
         const TELEGRAM_USERNAME = "torgoviy_dim_adm";
         const FACEBOOK_GROUP_LINK = "https://www.facebook.com/groups/1490125305479222";
@@ -51,22 +50,20 @@
             return `viber://chat?number=${encodeURIComponent(formatted)}`;
         }
 
-        // Універсальна функція копіювання з резервним методом (працює в TikTok)
-        function copyTextToClipboard(text, button, originalText) {
-            // Спроба 1: сучасний clipboard API
+        // Універсальна функція копіювання з резервним методом
+        function copyTextToClipboard(text, button, originalHTML) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
-                    showSuccess(button, originalText);
+                    showSuccess(button, originalHTML);
                 }).catch(() => {
-                    fallbackCopy(text, button, originalText);
+                    fallbackCopy(text, button, originalHTML);
                 });
             } else {
-                // Спроба 2: старий метод для TikTok та старих браузерів
-                fallbackCopy(text, button, originalText);
+                fallbackCopy(text, button, originalHTML);
             }
         }
 
-        function fallbackCopy(text, button, originalText) {
+        function fallbackCopy(text, button, originalHTML) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.style.position = 'fixed';
@@ -75,23 +72,20 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                showSuccess(button, originalText);
+                showSuccess(button, originalHTML);
             } catch (err) {
-                button.textContent = '❌ Не вдалося';
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.style.background = '#6FA8DC';
-                }, 2000);
+                button.innerHTML = '❌ Помилка';
+                setTimeout(() => button.innerHTML = originalHTML, 2000);
             }
             document.body.removeChild(textarea);
         }
 
-        function showSuccess(button, originalText) {
-            const originalHTML = button.innerHTML;
+        function showSuccess(button, originalHTML) {
+            const savedHTML = button.innerHTML;
             button.innerHTML = '✓ Скопійовано!';
             button.style.background = '#28a745';
             setTimeout(() => {
-                button.innerHTML = originalHTML;
+                button.innerHTML = savedHTML || originalHTML;
                 button.style.background = '#6FA8DC';
             }, 2000);
         }
@@ -99,54 +93,53 @@
         // Функції копіювання
         function copyCardNumber() {
             const btn = event.target;
-            copyTextToClipboard(CARD_NUMBER, btn, 'Скопіювати номер');
+            copyTextToClipboard(CARD_NUMBER, btn, btn.innerHTML);
         }
         function copyPaymentPurposeCard() {
             const btn = event.target;
-            copyTextToClipboard(PAYMENT_PURPOSE, btn, 'Скопіювати');
+            copyTextToClipboard(PAYMENT_PURPOSE, btn, btn.innerHTML);
         }
         function copyIBAN() {
             const btn = event.target;
-            copyTextToClipboard(IBAN, btn, 'Скопіювати IBAN');
+            copyTextToClipboard(IBAN, btn, btn.innerHTML);
         }
         function copyEDRPOU() {
             const btn = event.target;
-            copyTextToClipboard(EDRPOU, btn, 'Скопіювати');
+            copyTextToClipboard(EDRPOU, btn, btn.innerHTML);
         }
         function copyPaymentPurpose() {
             const btn = event.target;
-            copyTextToClipboard(PAYMENT_PURPOSE, btn, 'Скопіювати');
+            copyTextToClipboard(PAYMENT_PURPOSE, btn, btn.innerHTML);
         }
         function copyViberPhone() {
             const btn = event.target;
             const formatted = formatPhoneNumber(VIBER_PHONE);
-            copyTextToClipboard(formatted, btn, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(formatted, btn, btn.innerHTML);
         }
         function copyViberChannel() {
             const btn = event.target;
-            copyTextToClipboard(VIBER_CHANNEL_LINK, btn, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(VIBER_CHANNEL_LINK, btn, btn.innerHTML);
         }
         function copyTelegramUsername() {
             const btn = event.target;
-            copyTextToClipboard('@' + TELEGRAM_USERNAME, btn, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard('@' + TELEGRAM_USERNAME, btn, btn.innerHTML);
         }
         function copyFacebookGroup() {
             const btn = event.target;
-            copyTextToClipboard(FACEBOOK_GROUP_LINK, btn, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(FACEBOOK_GROUP_LINK, btn, btn.innerHTML);
         }
         function copyPaymentTemplate() {
             const btn = event.target;
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
             text = text.replace(/\\n/g, '\n');
-            copyTextToClipboard(text, btn, 'Скопіювати шаблон');
+            copyTextToClipboard(text, btn, btn.innerHTML);
         }
 
         function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
         function openViberChannel() { window.open(VIBER_CHANNEL_LINK, '_blank'); }
         function openTelegram() { window.open('https://t.me/' + TELEGRAM_USERNAME, '_blank'); }
         function openFacebookGroup() { window.open(FACEBOOK_GROUP_LINK, '_blank'); }
-        function callPhone() { window.location.href = 'tel:' + formatPhoneNumber(PHONE_FOR_CALL); }
 
         let currentContactData = null;
         function showContactModal(name, value, type) {
@@ -176,8 +169,7 @@
         function modalCopyContact() {
             if (!currentContactData) return;
             const btn = event.target;
-            const original = btn.textContent;
-            copyTextToClipboard(currentContactData.value, btn, original);
+            copyTextToClipboard(currentContactData.value, btn, 'Скопіювати');
         }
 
         function modalOpenContact() {
@@ -240,7 +232,6 @@
             color: #444444;
             line-height: 1.7;
             min-height: 100vh;
-            padding-bottom: 80px;
         }
         .container {
             max-width: 100%;
@@ -511,23 +502,6 @@
             margin-top: 12px;
             color: #1e40af;
         }
-        .call-button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #28a745;
-            color: white;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-            z-index: 1000;
-        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -757,9 +731,7 @@
             </div>
         </div>
     </div>
-    <a href="tel:+380687005650" class="call-button">
-        <i class="bi bi-telephone-fill"></i>
-    </a>
+
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
