@@ -238,7 +238,7 @@
                 if (TELEGRAM_SHOWCASE) {
                     const isInvite = isTelegramInviteLink(TELEGRAM_SHOWCASE);
                     document.getElementById('telegramShowcase').textContent = isInvite ? 'Телеграм-спільнота' : TELEGRAM_SHOWCASE;
-                    showcaseItem.style.display = 'block';
+                    showcaseItem.style.display = 'flex';
                     document.getElementById('telegramShowcaseButtons').style.display = 'flex';
                 } else {
                     showcaseItem.style.display = 'none';
@@ -440,16 +440,12 @@
             background: #f0f8ff;
             border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             border-left: 5px solid #6FA8DC;
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .contact-header {
-            display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
+            cursor: pointer;
         }
         .contact-icon {
             background: white;
@@ -462,8 +458,9 @@
             box-shadow: 0 4px 12px rgba(111,168,220,0.1);
             flex-shrink: 0;
         }
-        .contact-info {
+        .contact-content {
             flex: 1;
+            min-width: 0;
         }
         .contact-name {
             font-weight: 600;
@@ -490,30 +487,31 @@
             color: #444444;
             font-size: 18px;
             margin-top: 4px;
-            word-break: break-all;
         }
         .contact-actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            flex-shrink: 0;
         }
         .contact-action-btn {
             background: #6FA8DC;
             color: white;
             border: none;
-            padding: 16px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
+            box-shadow: 0 4px 12px rgba(111,168,220,0.4);
+            font-size: 24px;
+            transition: all 0.2s ease;
         }
         .contact-action-btn:hover {
             background: #5c92c4;
+            transform: scale(1.1);
         }
         .contact-open-btn {
             background: #5c92c4;
@@ -580,20 +578,14 @@
         .modal-action-btn:hover { background: #5c92c4; }
 
         @media (max-width: 480px) {
-            .header h1 { font-size: 26px; }
-            .header p { font-size: 16px; }
-            .section-title { font-size: 22px; }
-            .content { padding: 20px 14px; }
-            .contact-actions {
-                flex-direction: row;
-            }
             .contact-action-btn {
-                flex: 1;
-                padding: 16px;
-                font-size: 15px;
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
             }
-            .template-container { flex-direction: column; }
-            .copy-button-template { width: 100%; }
+            .contact-actions {
+                gap: 16px;
+            }
         }
     </style>
 </head>
@@ -605,7 +597,56 @@
         </div>
 
         <div class="content">
-            <!-- Реквізити, шаблон, умови — без змін -->
+            <div class="section">
+                <div class="section-title">💳 Реквізити для оплати</div>
+                <div class="card">
+                    <div class="fop-info">
+                        <div class="fop-name" id="fopName"></div>
+                    </div>
+
+                    <div class="copy-section">
+                        <h3>Скопіюйте для оплати</h3>
+
+                        <div class="data-block">
+                            <div class="data-label">IBAN (<span id="bankName"></span>):</div>
+                            <div class="data-value" id="ibanValue"></div>
+                            <button class="copy-button" id="copyIbanButton" onclick="copyIBAN()">Скопіювати IBAN</button>
+                        </div>
+
+                        <div class="data-block">
+                            <div class="data-label">ЄДРПОУ:</div>
+                            <div class="data-value" id="edrpouValue"></div>
+                            <button class="copy-button" id="copyEdrpouButton" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
+                        </div>
+
+                        <div class="data-block">
+                            <div class="data-label">Призначення платежу:</div>
+                            <div class="data-value" id="paymentPurposeValue"></div>
+                            <button class="copy-button" id="copyPurposeButton" onclick="copyPaymentPurpose()">Скопіювати</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <div class="card">
+                    <div class="section-title">📦 Після оплати</div>
+                    <p style="margin-bottom: 20px; font-size: 16px;">Надішліть скріншот оплати та заповнений шаблон:</p>
+
+                    <div class="template-container">
+                        <div class="template-content">
+                            <div class="template-text" id="paymentTemplateDisplay"></div>
+                        </div>
+                        <button class="copy-button-template" id="copyTemplateButton" onclick="copyPaymentTemplate()">
+                            Скопіювати<br>шаблон
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
 
             <div class="section">
                 <div class="contact-section">
@@ -617,73 +658,67 @@
 
                     <div style="margin-top: 20px;">
                         <!-- Телеграм -->
-                        <div class="contact-item">
-                            <div class="contact-header">
-                                <div class="contact-icon">
-                                    <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
+                        <div class="contact-item" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Телеграм
+                                    <span class="copy-success-badge" id="telegramCopyBadge">✓ Скопійовано!</span>
                                 </div>
-                                <div class="contact-info">
-                                    <div class="contact-name">
-                                        Телеграм
-                                        <span class="copy-success-badge" id="telegramCopyBadge">✓ Скопійовано!</span>
-                                    </div>
-                                    <div class="contact-value" id="telegramUsername"></div>
-                                </div>
+                                <div class="contact-value" id="telegramUsername"></div>
                             </div>
                             <div class="contact-actions">
-                                <button class="contact-action-btn contact-open-btn" onclick="openTelegram()">
-                                    Відкрити в Telegram
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openTelegram()">
+                                    <i class="bi bi-box-arrow-up-right"></i>
                                 </button>
-                                <button class="contact-action-btn" onclick="copyTelegramUsername()">
-                                    Скопіювати username
+                                <button class="contact-action-btn" onclick="event.stopPropagation(); copyTelegramUsername()">
+                                    <i class="bi bi-clipboard"></i>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Вайбер -->
-                        <div class="contact-item">
-                            <div class="contact-header">
-                                <div class="contact-icon">
-                                    <img src="https://simpleicons.org/icons/viber.svg" width="32" height="32">
+                        <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/viber.svg" width="32" height="32">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Вайбер
+                                    <span class="copy-success-badge" id="viberCopyBadge">✓ Скопійовано!</span>
                                 </div>
-                                <div class="contact-info">
-                                    <div class="contact-name">
-                                        Вайбер
-                                        <span class="copy-success-badge" id="viberCopyBadge">✓ Скопійовано!</span>
-                                    </div>
-                                    <div class="contact-value" id="viberPhone"></div>
-                                </div>
+                                <div class="contact-value" id="viberPhone"></div>
                             </div>
                             <div class="contact-actions">
-                                <button class="contact-action-btn contact-open-btn" onclick="openViber()">
-                                    Відкрити в Viber
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openViber()">
+                                    <i class="bi bi-box-arrow-up-right"></i>
                                 </button>
-                                <button class="contact-action-btn" onclick="copyViberPhone()">
-                                    Скопіювати номер
+                                <button class="contact-action-btn" onclick="event.stopPropagation(); copyViberPhone()">
+                                    <i class="bi bi-clipboard"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Вітрина (якщо є) -->
-                        <div class="contact-item" id="telegramShowcaseItem" style="display:none;">
-                            <div class="contact-header">
-                                <div class="contact-icon">
-                                    <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
+                        <!-- Вітрина -->
+                        <div class="contact-item" id="telegramShowcaseItem" style="display:none;" onclick="showContactModal('Вітрина', 'Телеграм-спільнота', 'telegram')">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Вітрина
+                                    <span class="copy-success-badge" id="showcaseCopyBadge">✓ Скопійовано!</span>
                                 </div>
-                                <div class="contact-info">
-                                    <div class="contact-name">
-                                        Вітрина
-                                        <span class="copy-success-badge" id="showcaseCopyBadge">✓ Скопійовано!</span>
-                                    </div>
-                                    <div class="contact-value" id="telegramShowcase"></div>
-                                </div>
+                                <div class="contact-value" id="telegramShowcase"></div>
                             </div>
                             <div class="contact-actions" id="telegramShowcaseButtons">
-                                <button class="contact-action-btn contact-open-btn" onclick="openTelegramShowcase()">
-                                    Відкрити в Telegram
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openTelegramShowcase()">
+                                    <i class="bi bi-box-arrow-up-right"></i>
                                 </button>
-                                <button class="contact-action-btn" onclick="copyTelegramShowcase()">
-                                    Скопіювати посилання
+                                <button class="contact-action-btn" onclick="event.stopPropagation(); copyTelegramShowcase()">
+                                    <i class="bi bi-clipboard"></i>
                                 </button>
                             </div>
                         </div>
@@ -691,10 +726,50 @@
                 </div>
             </div>
 
-            <!-- Інші блоки (умови, футер) — без змін -->
+            <div class="divider"></div>
+
+            <div class="section">
+                <div class="return-conditions">
+                    <div class="section-title">Умови оплати та доставки</div>
+
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Оплата</h3>
+                    <div class="payment-options" id="paymentOptions"></div>
+
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Доставка</h3>
+                    <ul class="delivery-list">
+                        <li><strong>Спосіб:</strong> <span id="deliveryMethod"></span></li>
+                        <li><strong>Термін:</strong> <span id="deliveryTime"></span></li>
+                        <li><strong>Примітка:</strong> <span id="deliveryNote"></span></li>
+                    </ul>
+
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Обмін та повернення</h3>
+                    <ul id="exchangeReturnList"></ul>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>Дякуємо за вибір нашого магазину!</p>
+                <em>Нехай ваш дім завжди буде наповнений затишком та теплом 🏡</em>
+            </div>
         </div>
     </div>
 
-    <!-- Модальне вікно — без змін -->
+    <!-- Модальне вікно -->
+    <div id="contactModal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div id="modalIcon"></div>
+                    <h3 id="modalMessengerName" style="margin:0; font-size:20px;"></h3>
+                </div>
+                <button style="background:none;border:none;font-size:32px;color:#6FA8DC;cursor:pointer;" onclick="closeContactModal()">×</button>
+            </div>
+            <div class="modal-contact-value" id="modalContactValue"></div>
+            <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px;">
+                <button class="modal-action-btn" onclick="modalCopyContact()">Скопіювати</button>
+                <button class="modal-action-btn" onclick="modalOpenContact()">Відкрити в додатку</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
