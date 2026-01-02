@@ -51,67 +51,95 @@
             return `viber://chat?number=${encodeURIComponent(formatted)}`;
         }
 
-        // Універсальна функція копіювання з відображенням на кнопці
-        function copyAndShow(button, text, originalText) {
-            navigator.clipboard.writeText(text).then(() => {
-                button.textContent = '✓ Скопійовано!';
-                button.style.background = '#28a745'; // зелений на успіх
+        // Універсальна функція копіювання з резервним методом (працює в TikTok)
+        function copyTextToClipboard(text, button, originalText) {
+            // Спроба 1: сучасний clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showSuccess(button, originalText);
+                }).catch(() => {
+                    fallbackCopy(text, button, originalText);
+                });
+            } else {
+                // Спроба 2: старий метод для TikTok та старих браузерів
+                fallbackCopy(text, button, originalText);
+            }
+        }
+
+        function fallbackCopy(text, button, originalText) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showSuccess(button, originalText);
+            } catch (err) {
+                button.textContent = '❌ Не вдалося';
                 setTimeout(() => {
-                    button.textContent = originalText;
+                    button.innerHTML = originalText;
                     button.style.background = '#6FA8DC';
                 }, 2000);
-            }).catch(() => {
-                button.textContent = '❌ Помилка';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                }, 2000);
-            });
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showSuccess(button, originalText) {
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '✓ Скопійовано!';
+            button.style.background = '#28a745';
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.style.background = '#6FA8DC';
+            }, 2000);
         }
 
         // Функції копіювання
         function copyCardNumber() {
             const btn = event.target;
-            copyAndShow(btn, CARD_NUMBER, 'Скопіювати номер');
+            copyTextToClipboard(CARD_NUMBER, btn, 'Скопіювати номер');
         }
         function copyPaymentPurposeCard() {
             const btn = event.target;
-            copyAndShow(btn, PAYMENT_PURPOSE, 'Скопіювати');
+            copyTextToClipboard(PAYMENT_PURPOSE, btn, 'Скопіювати');
         }
         function copyIBAN() {
             const btn = event.target;
-            copyAndShow(btn, IBAN, 'Скопіювати IBAN');
+            copyTextToClipboard(IBAN, btn, 'Скопіювати IBAN');
         }
         function copyEDRPOU() {
             const btn = event.target;
-            copyAndShow(btn, EDRPOU, 'Скопіювати');
+            copyTextToClipboard(EDRPOU, btn, 'Скопіювати');
         }
         function copyPaymentPurpose() {
             const btn = event.target;
-            copyAndShow(btn, PAYMENT_PURPOSE, 'Скопіювати');
+            copyTextToClipboard(PAYMENT_PURPOSE, btn, 'Скопіювати');
         }
         function copyViberPhone() {
             const btn = event.target;
             const formatted = formatPhoneNumber(VIBER_PHONE);
-            copyAndShow(btn, formatted, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(formatted, btn, '<i class="bi bi-clipboard"></i>');
         }
         function copyViberChannel() {
             const btn = event.target;
-            copyAndShow(btn, VIBER_CHANNEL_LINK, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(VIBER_CHANNEL_LINK, btn, '<i class="bi bi-clipboard"></i>');
         }
         function copyTelegramUsername() {
             const btn = event.target;
-            copyAndShow(btn, '@' + TELEGRAM_USERNAME, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard('@' + TELEGRAM_USERNAME, btn, '<i class="bi bi-clipboard"></i>');
         }
         function copyFacebookGroup() {
             const btn = event.target;
-            copyAndShow(btn, FACEBOOK_GROUP_LINK, '<i class="bi bi-clipboard"></i>');
+            copyTextToClipboard(FACEBOOK_GROUP_LINK, btn, '<i class="bi bi-clipboard"></i>');
         }
         function copyPaymentTemplate() {
             const btn = event.target;
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
             text = text.replace(/\\n/g, '\n');
-            copyAndShow(btn, text, 'Скопіювати шаблон');
+            copyTextToClipboard(text, btn, 'Скопіювати шаблон');
         }
 
         function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
@@ -147,15 +175,9 @@
 
         function modalCopyContact() {
             if (!currentContactData) return;
-            navigator.clipboard.writeText(currentContactData.value);
             const btn = event.target;
             const original = btn.textContent;
-            btn.textContent = '✓ Скопійовано!';
-            btn.style.background = '#28a745';
-            setTimeout(() => {
-                btn.textContent = original;
-                btn.style.background = '#6FA8DC';
-            }, 2000);
+            copyTextToClipboard(currentContactData.value, btn, original);
         }
 
         function modalOpenContact() {
@@ -324,7 +346,7 @@
             color: #444444;
             word-break: break-all;
         }
-        .copy-button {
+        .copy-button, .copy-button-template {
             background: #6FA8DC;
             color: white;
             border: none;
@@ -337,6 +359,11 @@
             align-self: flex-start;
             min-width: 180px;
             transition: background 0.3s ease;
+            text-align: center;
+        }
+        .copy-button-template {
+            min-width: auto;
+            width: 100%;
         }
         .payment-note {
             font-size: 15px;
@@ -366,17 +393,6 @@
             line-height: 1.8;
             white-space: pre-line;
             color: #2c5282;
-        }
-        .copy-button-template {
-            background: #6FA8DC;
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
-            text-align: center;
-            transition: background 0.3s ease;
         }
         .payment-option, .delivery-list li {
             background: #f0f8ff;
