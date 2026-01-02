@@ -22,6 +22,7 @@
         const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
         const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
+        const TELEGRAM_USERNAME = "torgoviy_dim_adm";
         const PAYMENT_OPTIONS = [
             "🔷 Повна передоплата 100%",
             "🔷 Накладений платіж (з передоплатою 200 грн)"
@@ -70,6 +71,10 @@
             copyToClipboard(VIBER_CHANNEL_LINK, '✓ Посилання на канал скопійовано');
             showCopySuccess('viberChannelCopyBadge');
         }
+        function copyTelegramUsername() {
+            copyToClipboard('@' + TELEGRAM_USERNAME, '✓ Username скопійовано');
+            showCopySuccess('telegramCopyBadge');
+        }
         function copyPaymentTemplate() {
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
@@ -87,6 +92,7 @@
 
         function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
         function openViberChannel() { window.open(VIBER_CHANNEL_LINK, '_blank'); }
+        function openTelegram() { window.open('https://t.me/' + TELEGRAM_USERNAME, '_blank'); }
 
         let currentContactData = null;
         function showContactModal(name, value, type) {
@@ -94,7 +100,8 @@
             document.getElementById('modalMessengerName').textContent = name;
             document.getElementById('modalContactValue').textContent = value;
             const icon = document.getElementById('modalIcon');
-            if (type === 'viber') icon.innerHTML = '<img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">';
+            if (type === 'telegram') icon.innerHTML = '<img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">';
+            else if (type === 'viber') icon.innerHTML = '<img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">';
             const modal = document.getElementById('contactModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('show'), 10);
@@ -118,8 +125,14 @@
 
         function modalOpenContact() {
             if (!currentContactData) return;
-            if (currentContactData.type === 'viber') {
-                window.open(currentContactData.value, '_blank');
+            if (currentContactData.type === 'telegram') {
+                window.open('https://t.me/' + currentContactData.value.replace('@', ''), '_blank');
+            } else if (currentContactData.type === 'viber') {
+                if (currentContactData.value.includes('invite.viber.com')) {
+                    window.open(currentContactData.value, '_blank');
+                } else {
+                    window.location.href = createViberUrl(currentContactData.value);
+                }
             }
             closeContactModal();
         }
@@ -136,6 +149,7 @@
                 document.getElementById('cardNumberValue').textContent = CARD_NUMBER;
                 document.getElementById('paymentPurposeCardValue').textContent = PAYMENT_PURPOSE;
                 document.getElementById('viberPhone').textContent = formatPhoneNumber(VIBER_PHONE);
+                document.getElementById('telegramUsername').textContent = '@' + TELEGRAM_USERNAME;
                 document.getElementById('viberChannelLink').textContent = "Приєднатися до каналу";
 
                 const templateEl = document.getElementById('paymentTemplateDisplay');
@@ -575,7 +589,29 @@
                     Для TikTok: три крапки → "Відкрити в браузері", щоб кнопки працювали
                 </div>
                 <div style="margin-top: 20px;">
-                    <!-- Особистий чат у Вайбері -->
+                    <!-- Телеграм (особистий чат) -->
+                    <div class="contact-item" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
+                        <div class="contact-icon">
+                            <img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">
+                        </div>
+                        <div class="contact-content">
+                            <div class="contact-name">
+                                Телеграм (особистий чат)
+                                <span class="copy-success-badge" id="telegramCopyBadge">✓ Скопійовано!</span>
+                            </div>
+                            <div class="contact-value" id="telegramUsername"></div>
+                        </div>
+                        <div class="contact-actions">
+                            <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openTelegram()">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
+                            <button class="contact-action-btn" onclick="event.stopPropagation(); copyTelegramUsername()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Вайбер (особистий чат) -->
                     <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
                         <div class="contact-icon">
                             <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
@@ -597,7 +633,7 @@
                         </div>
                     </div>
 
-                    <!-- Вайбер-канал -->
+                    <!-- Вайбер-спільнота -->
                     <div class="contact-item" onclick="showContactModal('Вайбер-спільнота', VIBER_CHANNEL_LINK, 'viber')">
                         <div class="contact-icon">
                             <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
