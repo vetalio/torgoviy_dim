@@ -11,13 +11,13 @@
 
     <script>
         // ============================================
-        // КОНФІГУРАЦІЯ — ЗМІНІТЬ ПІД СЕБЕ
+        // КОНФІГУРАЦІЯ
         // ============================================
 
         const SHOP_NAME = "Торговий дім «Домашній Затишок»";
         const SHOP_SLOGAN = "Товари для дому з турботою про вас";
 
-        const FOP_NAME = "ФОП Міхіна Вікторія Вікторівна";
+        const FOP_NAME = "ФОП Матяш Тетяна Іванівна";
         const EDRPOU = "2659800304";
         const IBAN = "UA513220010000026006370004597";
         const BANK_NAME = "Монобанк";
@@ -73,7 +73,7 @@
                 const originalColor = button.style.color || '';
 
                 button.innerHTML = successMessage;
-                button.style.background = '#F4C2C2';
+                button.style.background = '#6FA8DC';
                 button.style.color = '#ffffff';
 
                 setTimeout(() => {
@@ -256,8 +256,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #FFF5F5;
-            color: #5D5D5D;
+            background: #F0F8FF;
+            color: #444444;
             line-height: 1.7;
             min-height: 100vh;
         }
@@ -268,11 +268,11 @@
             min-height: 100vh;
         }
         .header {
-            background: linear-gradient(to bottom, #F4C2C2, #F8D7DA);
-            color: #856464;
+            background: linear-gradient(to bottom, #A7CDE8, #B8D9F0);
+            color: #2c5282;
             padding: 40px 20px 30px;
             text-align: center;
-            border-bottom: 4px solid #F4C2C2;
+            border-bottom: 4px solid #6FA8DC;
         }
         .header h1 {
             font-family: 'Playfair Display', serif;
@@ -289,7 +289,7 @@
         .section-title {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
-            color: #B76E79;
+            color: #2c5282;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -300,12 +300,12 @@
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 6px 20px rgba(244,194,194,0.15);
-            border: 1px solid #F8D7DA;
+            box-shadow: 0 6px 20px rgba(111,168,220,0.15);
+            border: 1px solid #d0e4f5;
         }
         .fop-info {
-            background: #FDF2F2;
-            border-left: 5px solid #F4C2C2;
+            background: #f0f8ff;
+            border-left: 5px solid #6FA8DC;
             padding: 20px;
             border-radius: 16px;
             margin-bottom: 24px;
@@ -313,17 +313,17 @@
         .fop-name {
             font-size: 17px;
             font-weight: 600;
-            color: #856464;
+            color: #2c5282;
         }
         .copy-section h3 {
             text-align: center;
-            color: #B76E79;
+            color: #2c5282;
             margin-bottom: 20px;
             font-size: 16px;
             font-weight: 600;
         }
         .data-block {
-            background: #FDF2F2;
+            background: #f0f8ff;
             border-radius: 16px;
             padding: 18px;
             margin: 14px 0;
@@ -334,19 +334,19 @@
         }
         .data-label {
             font-size: 15px;
-            color: #B76E79;
+            color: #2c5282;
             font-weight: 600;
         }
         .data-value {
             font-size: 16px;
             font-weight: 600;
-            color: #5D5D5D;
+            color: #444444;
             word-break: break-all;
             flex: 1;
             min-width: 200px;
         }
         .copy-button {
-            background: #F4C2C2;
+            background: #6FA8DC;
             color: white;
             border: none;
             padding: 14px 24px;
@@ -354,10 +354,10 @@
             font-weight: 600;
             font-size: 15px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(244,194,194,0.3);
+            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
             min-width: 140px;
         }
-        .copy-button:hover { background: #F1A7A7; }
+        .copy-button:hover { background: #5c92c4; }
         .template-container {
             display: flex;
             gap: 16px;
@@ -365,20 +365,20 @@
             margin: 24px 0;
         }
         .template-content {
-            background: #FDF2F2;
+            background: #f0f8ff;
             padding: 20px;
             border-radius: 16px;
-            border-left: 5px solid #F4C2C2;
+            border-left: 5px solid #6FA8DC;
             flex: 1;
         }
         .template-text {
             font-size: 16px;
             line-height: 1.9;
             white-space: pre-line;
-            color: #856464;
+            color: #2c5282;
         }
         .copy-button-template {
-            background: #F4C2C2;
+            background: #6FA8DC;
             color: white;
             padding: 16px;
             border-radius: 16px;
@@ -389,16 +389,16 @@
             justify-content: center;
             gap: 8px;
             min-width: 120px;
-            box-shadow: 0 4px 12px rgba(244,194,194,0.3);
+            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
             font-size: 14px;
         }
-        .copy-button-template:hover { background: #F1A7A7; }
-        .divider { height: 1px; background: #F8D7DA; margin: 36px 0; }
+        .copy-button-template:hover { background: #5c92c4; }
+        .divider { height: 1px; background: #d0e4f5; margin: 36px 0; }
         .payment-option, .delivery-list li {
-            background: #FDF2F2;
+            background: #f0f8ff;
             padding: 18px;
             border-radius: 16px;
-            border-left: 4px solid #F4C2C2;
+            border-left: 4px solid #6FA8DC;
             font-size: 16px;
             margin-bottom: 12px;
         }
@@ -406,43 +406,43 @@
             background: #FFFFFF;
             border-radius: 20px;
             padding: 28px;
-            box-shadow: 0 6px 20px rgba(244,194,194,0.15);
-            border: 1px solid #F8D7DA;
+            box-shadow: 0 6px 20px rgba(111,168,220,0.15);
+            border: 1px solid #d0e4f5;
         }
         .return-conditions ul {
             margin-top: 20px;
         }
         .return-conditions li {
-            background: #FDF2F2;
+            background: #f0f8ff;
             padding: 16px 20px;
             border-radius: 14px;
             margin-bottom: 14px;
-            border-left: 4px solid #F4C2C2;
+            border-left: 4px solid #6FA8DC;
             font-size: 15px;
         }
         .contact-section {
             background: #FFFFFF;
             border-radius: 20px;
             padding: 28px;
-            box-shadow: 0 6px 20px rgba(244,194,194,0.15);
-            border: 1px solid #F8D7DA;
+            box-shadow: 0 6px 20px rgba(111,168,220,0.15);
+            border: 1px solid #d0e4f5;
         }
         .tiktok-instruction {
-            background: #FFF0F0;
-            border: 1px solid #F4C2C2;
+            background: #e6f3ff;
+            border: 1px solid #A7CDE8;
             border-radius: 16px;
             padding: 20px;
             margin-top: 20px;
             font-size: 15px;
-            color: #856464;
+            color: #2c5282;
             text-align: center;
         }
         .contact-item {
-            background: #FDF2F2;
+            background: #f0f8ff;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 16px;
-            border-left: 5px solid #F4C2C2;
+            border-left: 5px solid #6FA8DC;
             display: flex;
             align-items: center;
             gap: 18px;
@@ -455,40 +455,40 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(244,194,194,0.1);
+            box-shadow: 0 4px 12px rgba(111,168,220,0.1);
         }
         .contact-name {
             font-weight: 600;
-            color: #B76E79;
+            color: #2c5282;
             font-size: 16px;
         }
         .contact-value {
             font-weight: 600;
-            color: #5D5D5D;
+            color: #444444;
             font-size: 18px;
         }
         .contact-actions button {
-            background: #F4C2C2;
+            background: #6FA8DC;
             width: 50px;
             height: 50px;
             border-radius: 16px;
             color: white;
             font-size: 20px;
         }
-        .contact-actions button:hover { background: #F1A7A7; }
+        .contact-actions button:hover { background: #5c92c4; }
         .footer {
             text-align: center;
             padding: 40px 20px;
-            color: #B76E79;
+            color: #2c5282;
             font-size: 17px;
-            background: #FFF0F0;
+            background: #e6f3ff;
         }
         .footer em {
             font-style: italic;
             font-size: 18px;
             display: block;
             margin-top: 12px;
-            color: #856464;
+            color: #1e40af;
         }
 
         /* Модальне вікно */
@@ -507,32 +507,32 @@
             padding: 32px;
             max-width: 90%;
             width: 340px;
-            box-shadow: 0 10px 40px rgba(244,194,194,0.3);
+            box-shadow: 0 10px 40px rgba(111,168,220,0.3);
         }
         .modal-header h3 {
             font-family: 'Playfair Display', serif;
-            color: #B76E79;
+            color: #2c5282;
             font-size: 22px;
         }
         .modal-contact-value {
-            background: #FDF2F2;
+            background: #f0f8ff;
             padding: 24px;
             border-radius: 18px;
             font-size: 18px;
             font-weight: 600;
-            color: #5D5D5D;
+            color: #444444;
             text-align: center;
-            border: 2px dashed #F4C2C2;
+            border: 2px dashed #6FA8DC;
         }
         .modal-action-btn {
-            background: #F4C2C2;
+            background: #6FA8DC;
             border-radius: 18px;
             padding: 18px;
             font-weight: 600;
             color: white;
             font-size: 16px;
         }
-        .modal-action-btn:hover { background: #F1A7A7; }
+        .modal-action-btn:hover { background: #5c92c4; }
 
         @media (max-width: 480px) {
             .header h1 { font-size: 26px; }
@@ -663,17 +663,17 @@
                 <div class="return-conditions">
                     <div class="section-title">Умови оплати та доставки</div>
 
-                    <h3 style="color: #B76E79; margin: 24px 0 16px; font-size: 18px;">Оплата</h3>
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Оплата</h3>
                     <div class="payment-options" id="paymentOptions"></div>
 
-                    <h3 style="color: #B76E79; margin: 24px 0 16px; font-size: 18px;">Доставка</h3>
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Доставка</h3>
                     <ul class="delivery-list">
                         <li><strong>Спосіб:</strong> <span id="deliveryMethod"></span></li>
                         <li><strong>Термін:</strong> <span id="deliveryTime"></span></li>
                         <li><strong>Примітка:</strong> <span id="deliveryNote"></span></li>
                     </ul>
 
-                    <h3 style="color: #B76E79; margin: 24px 0 16px; font-size: 18px;">Обмін та повернення</h3>
+                    <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Обмін та повернення</h3>
                     <ul id="exchangeReturnList"></ul>
                 </div>
             </div>
@@ -693,7 +693,7 @@
                     <div id="modalIcon"></div>
                     <h3 id="modalMessengerName" style="margin:0; font-size:20px;"></h3>
                 </div>
-                <button style="background:none;border:none;font-size:32px;color:#F4C2C2;cursor:pointer;" onclick="closeContactModal()">×</button>
+                <button style="background:none;border:none;font-size:32px;color:#6FA8DC;cursor:pointer;" onclick="closeContactModal()">×</button>
             </div>
             <div class="modal-contact-value" id="modalContactValue"></div>
             <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px;">
