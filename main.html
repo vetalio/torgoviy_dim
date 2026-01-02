@@ -23,6 +23,7 @@
         const VIBER_PHONE = "0687005650";
         const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
         const TELEGRAM_USERNAME = "torgoviy_dim_adm";
+        const FACEBOOK_GROUP_LINK = "https://www.facebook.com/groups/1490125305479222";
         const PAYMENT_OPTIONS = [
             "🔷 Повна передоплата 100%",
             "🔷 Накладений платіж (з передоплатою 200 грн)"
@@ -75,6 +76,10 @@
             copyToClipboard('@' + TELEGRAM_USERNAME, '✓ Username скопійовано');
             showCopySuccess('telegramCopyBadge');
         }
+        function copyFacebookGroup() {
+            copyToClipboard(FACEBOOK_GROUP_LINK, '✓ Посилання на групу скопійовано');
+            showCopySuccess('facebookCopyBadge');
+        }
         function copyPaymentTemplate() {
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
@@ -93,6 +98,7 @@
         function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
         function openViberChannel() { window.open(VIBER_CHANNEL_LINK, '_blank'); }
         function openTelegram() { window.open('https://t.me/' + TELEGRAM_USERNAME, '_blank'); }
+        function openFacebookGroup() { window.open(FACEBOOK_GROUP_LINK, '_blank'); }
 
         let currentContactData = null;
         function showContactModal(name, value, type) {
@@ -102,6 +108,7 @@
             const icon = document.getElementById('modalIcon');
             if (type === 'telegram') icon.innerHTML = '<img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">';
             else if (type === 'viber') icon.innerHTML = '<img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">';
+            else if (type === 'facebook') icon.innerHTML = '<img src="https://simpleicons.org/icons/facebook.svg" width="36" height="36">';
             const modal = document.getElementById('contactModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('show'), 10);
@@ -125,15 +132,7 @@
 
         function modalOpenContact() {
             if (!currentContactData) return;
-            if (currentContactData.type === 'telegram') {
-                window.open('https://t.me/' + currentContactData.value.replace('@', ''), '_blank');
-            } else if (currentContactData.type === 'viber') {
-                if (currentContactData.value.includes('invite.viber.com')) {
-                    window.open(currentContactData.value, '_blank');
-                } else {
-                    window.location.href = createViberUrl(currentContactData.value);
-                }
-            }
+            window.open(currentContactData.value, '_blank');
             closeContactModal();
         }
 
@@ -151,6 +150,7 @@
                 document.getElementById('viberPhone').textContent = formatPhoneNumber(VIBER_PHONE);
                 document.getElementById('telegramUsername').textContent = '@' + TELEGRAM_USERNAME;
                 document.getElementById('viberChannelLink').textContent = "Приєднатися до каналу";
+                document.getElementById('facebookGroupLink').textContent = "Приєднатися до групи";
 
                 const templateEl = document.getElementById('paymentTemplateDisplay');
                 if (templateEl) {
@@ -650,6 +650,28 @@
                                 <i class="bi bi-box-arrow-up-right"></i>
                             </button>
                             <button class="contact-action-btn" onclick="event.stopPropagation(); copyViberChannel()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Facebook-група -->
+                    <div class="contact-item" onclick="showContactModal('Facebook-група', FACEBOOK_GROUP_LINK, 'facebook')">
+                        <div class="contact-icon">
+                            <img src="https://simpleicons.org/icons/facebook.svg" width="36" height="36">
+                        </div>
+                        <div class="contact-content">
+                            <div class="contact-name">
+                                Facebook-група
+                                <span class="copy-success-badge" id="facebookCopyBadge">✓ Скопійовано!</span>
+                            </div>
+                            <div class="contact-value" id="facebookGroupLink">Приєднатися до групи</div>
+                        </div>
+                        <div class="contact-actions">
+                            <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openFacebookGroup()">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
+                            <button class="contact-action-btn" onclick="event.stopPropagation(); copyFacebookGroup()">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
