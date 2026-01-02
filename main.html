@@ -12,7 +12,7 @@
 
     <script>
         // ============================================
-        // КОНФІГУРАЦІЯ - ЗМІНІТЬ ДАНІ ТУТ
+        // КОНФІГУРАЦІЯ
         // ============================================
 
         const SHOP_NAME = "Домашній Побут";
@@ -121,8 +121,7 @@
         function copyPaymentPurpose() { copyToClipboard(PAYMENT_PURPOSE, 'copyPurposeButton', '✓ Призначення скопійовано'); }
 
         function copyTelegramUsername() {
-            const text = '@' + TELEGRAM_USERNAME;
-            copyToClipboard(text, 'copyTelegramButton', '', true);
+            copyToClipboard('@' + TELEGRAM_USERNAME, 'copyTelegramButton', '', true);
             showCopySuccess('telegramCopyBadge');
         }
 
@@ -134,7 +133,7 @@
 
         function copyPaymentTemplate() {
             const el = document.getElementById('paymentTemplateDisplay');
-            let text = el ? (el.textContent || el.innerText || '') : AFTER_PAYMENT_TEMPLATE;
+            let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
             text = text.replace(/\\n/g, '\n');
             copyToClipboard(text, 'copyTemplateButton', '✓ Шаблон скопійовано');
         }
@@ -185,7 +184,9 @@
         function modalOpenContact() {
             if (!currentContactData) return;
             if (currentContactData.type === 'telegram') {
-                window.open('https://t.me/' + currentContactData.value.replace('@', ''), '_blank');
+                const val = currentContactData.value;
+                const link = val.includes('t.me/') ? val : 'https://t.me/' + val.replace('@', '');
+                window.open(link, '_blank');
             } else if (currentContactData.type === 'viber') {
                 window.location.href = createViberUrl(currentContactData.value);
             } else if (currentContactData.type === 'instagram') {
@@ -236,17 +237,21 @@
         // Ініціалізація
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
+                // Заголовок
                 document.getElementById('shopNameHeader').textContent = SHOP_NAME;
 
+                // Реквізити
                 document.getElementById('fopName').textContent = FOP_NAME;
                 document.getElementById('edrpouValue').textContent = EDRPOU;
                 document.getElementById('ibanValue').textContent = IBAN;
                 document.getElementById('bankName').textContent = BANK_NAME;
                 document.getElementById('paymentPurposeValue').textContent = PAYMENT_PURPOSE;
 
+                // Контакти
                 document.getElementById('telegramUsername').textContent = '@' + TELEGRAM_USERNAME;
                 document.getElementById('viberPhone').textContent = formatPhoneNumber(VIBER_PHONE);
 
+                // Шаблон після оплати
                 const templateEl = document.getElementById('paymentTemplateDisplay');
                 if (templateEl) {
                     templateEl.textContent = AFTER_PAYMENT_TEMPLATE;
@@ -254,40 +259,83 @@
                 }
 
                 // Умови оплати
-                const paymentOptions = document.getElementById('paymentOptions');
-                PAYMENT_OPTIONS.forEach(opt => {
+                const paymentOptionsContainer = document.getElementById('paymentOptions');
+                PAYMENT_OPTIONS.forEach(option => {
                     const div = document.createElement('div');
                     div.className = 'payment-option';
-                    div.innerHTML = '<strong>' + opt + '</strong>';
-                    paymentOptions.appendChild(div);
+                    div.innerHTML = '<strong>' + option + '</strong>';
+                    paymentOptionsContainer.appendChild(div);
                 });
 
+                // Доставка
                 document.getElementById('deliveryMethod').textContent = DELIVERY_METHOD;
                 document.getElementById('deliveryTime').textContent = DELIVERY_TIME;
                 document.getElementById('deliveryNote').textContent = DELIVERY_NOTE;
 
-                // Обмін/повернення
-                const list = document.getElementById('exchangeReturnList');
+                // Обмін та повернення
+                const exchangeReturnList = document.getElementById('exchangeReturnList');
+                exchangeReturnList.innerHTML = '';
                 if (EXCHANGE_DAYS > 0) {
                     const li = document.createElement('li');
-                    li.innerHTML = `🔄 <strong>Обмін:</strong> протягом <strong>${EXCHANGE_DAYS} днів</strong>`;
-                    list.appendChild(li);
+                    li.innerHTML = `🔄 <strong>Обмін:</strong> протягом <strong>${EXCHANGE_DAYS} днів</strong> з моменту отримання`;
+                    exchangeReturnList.appendChild(li);
                 }
                 if (RETURN_DAYS > 0) {
                     const li = document.createElement('li');
-                    li.innerHTML = `↩️ <strong>Повернення:</strong> протягом <strong>${RETURN_DAYS} днів</strong>`;
-                    list.appendChild(li);
+                    li.innerHTML = `↩️ <strong>Повернення:</strong> протягом <strong>${RETURN_DAYS} днів</strong> з моменту отримання`;
+                    exchangeReturnList.appendChild(li);
                 }
                 if (EXCHANGE_DAYS > 0 || RETURN_DAYS > 0) {
+                    const condLi = document.createElement('li');
+                    condLi.innerHTML = `👕 <strong>Умови обміну/повернення:</strong>`;
+                    const ul = document.createElement('ul');
+                    ul.style.marginTop = '8px'; ul.style.paddingLeft = '20px'; ul.style.fontSize = '15px';
                     RETURN_CONDITIONS.forEach(c => {
-                        const li = document.createElement('li');
-                        li.textContent = c;
-                        list.appendChild(li);
+                        const li2 = document.createElement('li');
+                        li2.textContent = c;
+                        ul.appendChild(li2);
                     });
+                    condLi.appendChild(ul);
+                    exchangeReturnList.appendChild(condLi);
+
+                    const contactLi = document.createElement('li');
+                    contactLi.innerHTML = `📞 <strong>Для обміну/повернення:</strong> зв'яжіться з менеджером через Viber або Telegram`;
+                    exchangeReturnList.appendChild(contactLi);
+
+                    const moneyLi = document.createElement('li');
+                    moneyLi.innerHTML = `💰 <strong>Повернення коштів:</strong> на ті самі реквізити протягом <strong>${RETURN_MONEY_TIME}</strong>`;
+                    exchangeReturnList.appendChild(moneyLi);
+
+                    const deliveryLi = document.createElement('li');
+                    deliveryLi.innerHTML = `🚚 <strong>Вартість доставки при поверненні:</strong> ${RETURN_DELIVERY_COST}`;
+                    exchangeReturnList.appendChild(deliveryLi);
                 } else {
                     const li = document.createElement('li');
-                    li.innerHTML = `ℹ️ <strong>Обмін та повернення товару недоступні</strong>`;
-                    list.appendChild(li);
+                    li.innerHTML = `ℹ️ <strong>Обмін та повернення товару недоступні згідно з умовами продавця.</strong>`;
+                    exchangeReturnList.appendChild(li);
+                }
+
+                // Вітрина Telegram
+                const showcaseItem = document.getElementById('telegramShowcaseItem');
+                if (TELEGRAM_SHOWCASE) {
+                    const isInvite = isTelegramInviteLink(TELEGRAM_SHOWCASE);
+                    document.getElementById('telegramShowcase').textContent = isInvite ? 'Телеграм-спільнота' : '@' + TELEGRAM_SHOWCASE;
+                    showcaseItem.style.display = 'flex';
+                    document.getElementById('telegramShowcaseButtons').style.display = 'flex';
+                    document.getElementById('telegramShowcaseUnavailable').style.display = 'none';
+                } else {
+                    showcaseItem.style.display = 'none';
+                }
+
+                // Instagram
+                const instaItem = document.getElementById('instagramItem');
+                if (INSTAGRAM_USERNAME) {
+                    document.getElementById('instagramUsername').textContent = '@' + INSTAGRAM_USERNAME;
+                    document.getElementById('instagramButtons').style.display = 'flex';
+                    document.getElementById('instagramUnavailable').style.display = 'none';
+                    instaItem.style.display = 'flex';
+                } else {
+                    instaItem.style.display = 'none';
                 }
 
                 document.addEventListener('keydown', e => {
@@ -298,10 +346,81 @@
     </script>
 
     <style>
-        /* Усі стилі залишені без змін (скорочено для прикладу — вставте свої оригінальні стилі) */
-        /* ... ваш CSS ... */
-        body { font-family: 'Montserrat', sans-serif; background: #1a1a1a; color: #fff; }
-        /* Вставте повний CSS з вашого оригінального файлу */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #1a1a1a; color: #ffffff; line-height: 1.6; min-height: 100vh; }
+        .container { max-width: 100%; margin: 0 auto; background: #1a1a1a; min-height: 100vh; position: relative; }
+        .header { background: #2a2a2a; padding: 20px 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+        .header h1 { font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+        .header p { font-size: 14px; color: #b0b0b0; }
+        .content { padding: 16px; padding-bottom: 80px; }
+        .section { margin-bottom: 16px; }
+        .section-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .card { background: #2a2a2a; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .fop-info { background: #2a2a2a; border-left: 4px solid #4CAF50; padding: 16px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .fop-name { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 8px; line-height: 1.5; }
+        .copy-section { background: #2a2a2a; border-radius: 12px; padding: 16px; margin: 12px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .copy-section h3 { color: #b0b0b0; margin-bottom: 12px; font-size: 12px; font-weight: 500; }
+        .data-block { background: #333333; border-radius: 10px; padding: 12px; margin: 8px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+        .data-label { font-size: 12px; color: #b0b0b0; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+        .data-value { font-size: 13px; font-weight: 600; color: #ffffff; font-family: 'Montserrat', monospace; word-break: break-all; flex: 1; min-width: 0; line-height: 1.4; }
+        .copy-button { background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; white-space: nowrap; box-shadow: 0 2px 4px rgba(76,175,80,0.3); }
+        .copy-button:hover { background: #45a049; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(76,175,80,0.4); }
+        .copy-button:active { transform: translateY(0); background: #3d8b40; }
+        .template-container { display: flex; gap: 12px; align-items: stretch; margin: 12px 0; }
+        .template-content { background: #333333; padding: 12px; border-radius: 8px; border-left: 3px solid #4CAF50; flex: 1; min-width: 0; }
+        .template-text { font-family: 'Montserrat', monospace; font-size: 12px; line-height: 1.6; white-space: pre-line; color: #e0e0e0; }
+        .copy-button-template { background: #4CAF50; color: white; border: none; padding: 12px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 90px; box-shadow: 0 2px 4px rgba(76,175,80,0.3); }
+        .copy-button-template:hover { background: #45a049; }
+        .divider { height: 1px; background: #333333; margin: 16px 0; }
+        .payment-options, .delivery-list { list-style: none; padding: 0; margin: 8px 0 16px 0; display: flex; flex-direction: column; gap: 8px; }
+        .payment-option, .delivery-list li { background: #333333; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #e0e0e0; border-left: 3px solid #4CAF50; }
+        .return-conditions { background: #2a2a2a; border-radius: 12px; padding: 20px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .return-conditions ul { list-style: none; padding: 0; margin: 0; }
+        .return-conditions li { background: #333333; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; color: #e0e0e0; border-left: 3px solid #FF9800; }
+        .contact-section { background: #2a2a2a; padding: 16px; border-radius: 12px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .tiktok-instruction { margin-top: 12px; padding: 12px; background: #333333; border-radius: 10px; border-left: 3px solid #FF0050; }
+        .contact-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .contact-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #333333; border-radius: 10px; border-left: 3px solid transparent; }
+        .contact-item-telegram { border-left-color: #0088cc; }
+        .contact-item-viber { border-left-color: #665CAC; }
+        .contact-item-showcase { border-left-color: #0088cc; }
+        .contact-item-instagram { border-left-color: #E4405F; }
+        .contact-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contact-content { flex: 1; min-width: 0; }
+        .contact-name { font-size: 13px; font-weight: 600; color: #b0b0b0; display: flex; align-items: center; gap: 8px; }
+        .copy-success-badge { display: none; background: #28a745; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+        .copy-success-badge.show { display: inline-block; }
+        .contact-value { font-size: 14px; font-weight: 600; color: #ffffff; word-break: break-all; }
+        .contact-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .contact-action-btn { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .contact-action-btn:hover { background: rgba(255,255,255,0.2); }
+        .contact-open-btn:hover { background: #4CAF50; }
+        .contact-copy-btn:hover { background: #2196F3; }
+        .footer { text-align: center; padding: 20px 16px; color: #b0b0b0; font-size: 14px; }
+        .footer em { font-style: italic; }
+
+        /* Модальне вікно */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: #2a2a2a; border-radius: 16px; padding: 24px; max-width: 320px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #333333; }
+        .modal-header h3 { font-size: 18px; font-weight: 600; margin: 0; }
+        .modal-close-btn { background: transparent; border: none; color: #b0b0b0; cursor: pointer; font-size: 24px; }
+        .modal-close-btn:hover { color: #ffffff; }
+        .modal-contact-value { font-size: 16px; font-weight: 600; color: #ffffff; text-align: center; padding: 16px; background: #333333; border-radius: 10px; word-break: break-all; font-family: 'Montserrat', monospace; }
+        .modal-footer { display: flex; flex-direction: column; gap: 10px; }
+        .modal-action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; color: white; }
+        .modal-copy-btn { background: #2196F3; }
+        .modal-open-btn { background: #4CAF50; }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 22px; }
+            .section-title { font-size: 16px; }
+            .content { padding: 12px; }
+            .data-block { flex-direction: column; align-items: flex-start; }
+            .copy-button { width: 100%; }
+            .template-container { flex-direction: column; }
+            .copy-button-template { height: auto; padding: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -312,27 +431,28 @@
         </div>
 
         <div class="content">
-            <!-- Весь ваш контент: реквізити, шаблон після оплати, контакти, календар, умови — залишається без змін -->
-
-            <!-- Приклад блоку реквізитів -->
             <div class="section">
                 <div class="section-title">🔹 Реквізити для оплати:</div>
                 <div class="card">
                     <div class="fop-info">
                         <div class="fop-name" id="fopName"></div>
                     </div>
+
                     <div class="copy-section">
                         <h3>👇 Скопіюйте для оплати 👇</h3>
+
                         <div class="data-block">
                             <div class="data-label">💳 IBAN <span id="bankName"></span>:</div>
                             <div class="data-value" id="ibanValue"></div>
                             <button class="copy-button" id="copyIbanButton" onclick="copyIBAN()">Скопіювати IBAN</button>
                         </div>
+
                         <div class="data-block">
                             <div class="data-label">🏢 ЄДРПОУ:</div>
                             <div class="data-value" id="edrpouValue"></div>
                             <button class="copy-button" id="copyEdrpouButton" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
                         </div>
+
                         <div class="data-block">
                             <div class="data-label">📝 Призначення платежу:</div>
                             <div class="data-value" id="paymentPurposeValue"></div>
@@ -342,23 +462,139 @@
                 </div>
             </div>
 
-            <!-- Шаблон після оплати -->
+            <div class="divider"></div>
+
             <div class="section">
                 <div class="card">
                     <h3 style="margin: 0 0 12px 0; color: #ffffff; font-size: 16px; font-weight: 600;">📦 Після оплати:</h3>
-                    <p style="margin-bottom: 12px;">Надішліть менеджеру скріншот оплати та заповнений шаблон:</p>
+                    <p style="margin-bottom: 12px; font-size: 14px; color: #e0e0e0;">
+                        Надішліть менеджеру <strong style="color: #ffffff;">скріншот квитанції про успішну оплату</strong>, а також <strong style="color: #ffffff;">заповніть шаблон</strong>:
+                    </p>
+
                     <div class="template-container">
                         <div class="template-content">
                             <div class="template-text" id="paymentTemplateDisplay"></div>
                         </div>
                         <button class="copy-button-template" id="copyTemplateButton" onclick="copyPaymentTemplate()">
-                            <span>Скопіювати</span><span>текст</span><span>шаблону <i class="bi bi-files"></i></span>
+                            <span>Скопіювати</span>
+                            <span>текст</span>
+                            <span>шаблону <i class="bi bi-files"></i></span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Контакти, календар, умови — як було -->
+            <div class="divider"></div>
+
+            <div class="section">
+                <div class="contact-section">
+                    <h3>📞 Зв'язок з магазином:</h3>
+
+                    <div class="tiktok-instruction">
+                        <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                            <span>📱</span> Для користувачів TikTok:
+                        </div>
+                        <div style="font-size: 12px; line-height: 1.5; color: #b0b0b0;">
+                            Щоб кнопки <strong style="color: #ffffff;">"Відкрити"</strong> та <strong style="color: #ffffff;">"Скопіювати"</strong> працювали — натисніть <strong style="color: #ffffff;">три крапки вгорі праворуч → "відкрити в браузері"</strong>.
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+                        <!-- Telegram -->
+                        <div class="contact-item contact-item-telegram" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/telegram.svg" alt="Telegram" width="24" height="24">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Телеграм
+                                    <span class="copy-success-badge" id="telegramCopyBadge">✓ Скопійовано!</span>
+                                </div>
+                                <div class="contact-value" id="telegramUsername"></div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openTelegram()" title="Відкрити">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </button>
+                                <button class="contact-action-btn contact-copy-btn" onclick="event.stopPropagation(); copyTelegramUsername()" title="Скопіювати">
+                                    <i class="bi bi-files"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Viber -->
+                        <div class="contact-item contact-item-viber" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/viber.svg" alt="Viber" width="24" height="24">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Вайбер
+                                    <span class="copy-success-badge" id="viberCopyBadge">✓ Скопійовано!</span>
+                                </div>
+                                <div class="contact-value" id="viberPhone"></div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openViber()" title="Відкрити">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </button>
+                                <button class="contact-action-btn contact-copy-btn" onclick="event.stopPropagation(); copyViberPhone()" title="Скопіювати">
+                                    <i class="bi bi-files"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Вітрина -->
+                        <div class="contact-item contact-item-showcase" id="telegramShowcaseItem" style="display: none;">
+                            <div class="contact-icon">
+                                <img src="https://simpleicons.org/icons/telegram.svg" alt="Telegram" width="24" height="24">
+                            </div>
+                            <div class="contact-content">
+                                <div class="contact-name">
+                                    Вітрина
+                                    <span class="copy-success-badge" id="showcaseCopyBadge">✓ Скопійовано!</span>
+                                </div>
+                                <div class="contact-value" id="telegramShowcase"></div>
+                            </div>
+                            <div class="contact-actions" id="telegramShowcaseButtons">
+                                <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openTelegramShowcase()">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </button>
+                                <button class="contact-action-btn contact-copy-btn" onclick="event.stopPropagation(); copyTelegramShowcase()">
+                                    <i class="bi bi-files"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <div class="return-conditions">
+                    <div class="section-title" style="font-size: 16px; margin-bottom: 16px;">
+                        <span>💳</span>
+                        <span>Умови оплати, доставки та повернення</span>
+                    </div>
+
+                    <h3 style="margin: 0 0 12px 0; color: #ffffff; font-size: 14px; font-weight: 600;">🔄 Варіанти оплати:</h3>
+                    <div class="payment-options" id="paymentOptions"></div>
+
+                    <h3 style="margin: 0 0 12px 0; color: #ffffff; font-size: 14px; font-weight: 600;">🚚 Доставка по Україні:</h3>
+                    <ul class="delivery-list">
+                        <li>🔷 <strong id="deliveryMethod"></strong> ✅</li>
+                        <li>🔷 Відправка: <strong id="deliveryTime"></strong></li>
+                        <li>🔷 <span id="deliveryNote"></span></li>
+                        <li>🔷 <strong>Вартість доставки:</strong> відповідно до тарифів перевізника. Сплачує отримувач.</li>
+                    </ul>
+
+                    <div style="margin-top: 20px;">
+                        <h3 style="margin: 0 0 12px 0; color: #ffffff; font-size: 14px; font-weight: 600;">📋 Умови обміну та повернення:</h3>
+                        <ul id="exchangeReturnList"></ul>
+                    </div>
+                </div>
+            </div>
 
             <div class="footer">
                 ✨ <em>Дякуємо за ваше замовлення! Гарних покупок! 💫</em>
@@ -367,8 +603,8 @@
     </div>
 
     <!-- Модальне вікно -->
-    <div id="contactModal" class="modal-overlay" onclick="if(event.target === this) closeContactModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
+    <div id="contactModal" class="modal-overlay">
+        <div class="modal-content">
             <div class="modal-header">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div id="modalIcon"></div>
@@ -380,8 +616,12 @@
                 <div class="modal-contact-value" id="modalContactValue"></div>
             </div>
             <div class="modal-footer">
-                <button class="modal-action-btn modal-copy-btn" onclick="modalCopyContact()">Скопіювати</button>
-                <button class="modal-action-btn modal-open-btn" onclick="modalOpenContact()">Відкрити</button>
+                <button class="modal-action-btn modal-copy-btn" id="modalCopyButton" onclick="modalCopyContact()">
+                    <i class="bi bi-files"></i> Скопіювати
+                </button>
+                <button class="modal-action-btn modal-open-btn" onclick="modalOpenContact()">
+                    <i class="bi bi-box-arrow-up-right"></i> Відкрити
+                </button>
             </div>
         </div>
     </div>
