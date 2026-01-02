@@ -21,6 +21,7 @@
         const PAYMENT_PURPOSE = "Оплата за товари";
         const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
+        const PHONE_FOR_CALL = "0687005650"; // Номер для кнопки "Подзвонити"
         const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
         const TELEGRAM_USERNAME = "torgoviy_dim_adm";
         const FACEBOOK_GROUP_LINK = "https://www.facebook.com/groups/1490125305479222";
@@ -99,6 +100,7 @@
         function openViberChannel() { window.open(VIBER_CHANNEL_LINK, '_blank'); }
         function openTelegram() { window.open('https://t.me/' + TELEGRAM_USERNAME, '_blank'); }
         function openFacebookGroup() { window.open(FACEBOOK_GROUP_LINK, '_blank'); }
+        function callPhone() { window.location.href = 'tel:' + formatPhoneNumber(PHONE_FOR_CALL); }
 
         let currentContactData = null;
         function showContactModal(name, value, type) {
@@ -190,6 +192,7 @@
             color: #444444;
             line-height: 1.7;
             min-height: 100vh;
+            padding-bottom: 80px; /* Для фіксованої кнопки дзвінка */
         }
         .container {
             max-width: 100%;
@@ -214,7 +217,25 @@
             font-size: 17px;
             font-weight: 500;
         }
-        .content { padding: 32px 16px; }
+
+        /* Акційний банер */
+        .promo-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(238, 90, 82, 0.3);
+            margin: 0 16px 24px;
+            border-radius: 16px;
+        }
+        .promo-banner strong {
+            font-size: 20px;
+            text-decoration: underline;
+        }
+
+        .content { padding: 0 16px 32px; }
 
         .block-card {
             background: #FFFFFF;
@@ -466,6 +487,33 @@
             color: #1e40af;
         }
 
+        /* Фіксована кнопка "Подзвонити" */
+        .call-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            color: white;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .call-button:hover {
+            background: #218838;
+            transform: translateX(-50%) scale(1.1);
+        }
+        @media (min-width: 768px) {
+            .call-button { display: none; } /* Ховаємо на десктопі */
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -507,6 +555,8 @@
             .block-title { font-size: 24px; }
             .sub-title { font-size: 19px; }
             .contact-value { font-size: 22px; }
+            .promo-banner { font-size: 16px; margin: 0 8px 20px; padding: 14px; }
+            .promo-banner strong { font-size: 18px; }
         }
     </style>
 </head>
@@ -517,8 +567,12 @@
             <p id="shopSlogan"></p>
         </div>
 
-        <div class="content">
+        <!-- Акційний банер -->
+        <div class="promo-banner">
+            🎉 Акція: при замовленні від 1000 грн — доставка Укрпоштою <strong>безкоштовно</strong>!
+        </div>
 
+        <div class="content">
             <!-- Блок 1: Реквізити для оплати -->
             <div class="block-card">
                 <div class="block-title">💳 Реквізити для оплати</div>
@@ -589,7 +643,7 @@
                     Для TikTok: три крапки → "Відкрити в браузері", щоб кнопки працювали
                 </div>
                 <div style="margin-top: 20px;">
-                    <!-- Телеграм (особистий чат) -->
+                    <!-- Телеграм -->
                     <div class="contact-item" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
                         <div class="contact-icon">
                             <img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">
@@ -611,7 +665,7 @@
                         </div>
                     </div>
 
-                    <!-- Вайбер (особистий чат) -->
+                    <!-- Вайбер чат -->
                     <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
                         <div class="contact-icon">
                             <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
@@ -702,6 +756,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Фіксована кнопка "Подзвонити" (тільки на мобільних) -->
+    <a href="tel:+380687005650" class="call-button" onclick="callPhone()">
+        <i class="bi bi-telephone-fill"></i>
+    </a>
 
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
