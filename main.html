@@ -23,6 +23,9 @@
         const BANK_NAME = "Монобанк";
         const PAYMENT_PURPOSE = "Оплата за товари";
 
+        // НОВИЙ НОМЕР КАРТИ
+        const CARD_NUMBER = "5168757243101547";
+
         const TELEGRAM_USERNAME = "menedjer_amazon_lidl";
         const VIBER_PHONE = "0687005650";
         const TELEGRAM_SHOWCASE = "https://t.me/+Z-iCu_n0QYdmYTJi";
@@ -71,6 +74,8 @@
             });
         }
 
+        // Функції копіювання
+        function copyCardNumber() { copyToClipboard(CARD_NUMBER, '✓ Номер карти скопійовано'); }
         function copyIBAN() { copyToClipboard(IBAN, '✓ IBAN скопійовано'); }
         function copyEDRPOU() { copyToClipboard(EDRPOU, '✓ ЄДРПОУ скопійовано'); }
         function copyPaymentPurpose() { copyToClipboard(PAYMENT_PURPOSE, '✓ Призначення скопійовано'); }
@@ -181,6 +186,7 @@
                 document.getElementById('ibanValue').textContent = IBAN;
                 document.getElementById('bankName').textContent = BANK_NAME;
                 document.getElementById('paymentPurposeValue').textContent = PAYMENT_PURPOSE;
+                document.getElementById('cardNumberValue').textContent = CARD_NUMBER;
 
                 document.getElementById('telegramUsername').textContent = '@' + TELEGRAM_USERNAME;
                 document.getElementById('viberPhone').textContent = formatPhoneNumber(VIBER_PHONE);
@@ -599,7 +605,19 @@
                     </div>
 
                     <div class="copy-section">
-                        <h3>Скопіюйте для оплати</h3>
+                        <!-- НОВИЙ БЛОК: Оплата за номером карти -->
+                        <h3 style="color: #2c5282; margin-bottom: 16px;">Оплата за номером карти</h3>
+                        <div class="data-block">
+                            <div class="data-label">Номер карти (Монобанк):</div>
+                            <div class="data-value" id="cardNumberValue"></div>
+                            <button class="copy-button" onclick="copyCardNumber()">Скопіювати номер карти</button>
+                        </div>
+
+                        <!-- ВЕЛИКИЙ ВІДСТУП -->
+                        <div style="height: 40px;"></div>
+
+                        <!-- БЛОК: Оплата за реквізитами -->
+                        <h3 style="color: #2c5282; margin-bottom: 16px;">Оплата за реквізитами</h3>
 
                         <div class="data-block">
                             <div class="data-label">IBAN (<span id="bankName"></span>):</div>
