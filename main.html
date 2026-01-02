@@ -62,39 +62,27 @@
             return `viber://chat?number=${encodeURIComponent(formatted)}`;
         }
 
-        function copyToClipboard(text, buttonId, successMessage = '✓ Скопійовано!', skipButtonChange = false) {
+        function copyToClipboard(text, successMessage = '✓ Скопійовано!') {
             if (!text) return;
-
             navigator.clipboard.writeText(text).then(() => {
-                if (skipButtonChange) return;
-
-                const button = document.getElementById(buttonId);
-                if (!button) return;
-
-                const originalHTML = button.innerHTML;
-                const originalBg = button.style.background || '';
-                const originalColor = button.style.color || '';
-
-                button.innerHTML = successMessage;
-                button.style.background = '#6FA8DC';
-                button.style.color = '#ffffff';
-
-                setTimeout(() => {
-                    button.innerHTML = originalHTML;
-                    button.style.background = originalBg;
-                    button.style.color = originalColor;
-                }, 2000);
-            }).catch(() => alert('Не вдалося скопіювати'));
+                alert(successMessage);
+            }).catch(() => {
+                alert('Не вдалося скопіювати. Виділіть текст вручну.');
+            });
         }
 
+        function copyIBAN() { copyToClipboard(IBAN, '✓ IBAN скопійовано'); }
+        function copyEDRPOU() { copyToClipboard(EDRPOU, '✓ ЄДРПОУ скопійовано'); }
+        function copyPaymentPurpose() { copyToClipboard(PAYMENT_PURPOSE, '✓ Призначення скопійовано'); }
+
         function copyTelegramUsername() {
-            copyToClipboard('@' + TELEGRAM_USERNAME, 'copyTelegramButton', '', true);
+            copyToClipboard('@' + TELEGRAM_USERNAME, '✓ Username скопійовано');
             showCopySuccess('telegramCopyBadge');
         }
 
         function copyViberPhone() {
             const formatted = formatPhoneNumber(VIBER_PHONE);
-            copyToClipboard(formatted, 'copyViberPhoneButton', '', true);
+            copyToClipboard(formatted, '✓ Номер скопійовано');
             showCopySuccess('viberCopyBadge');
         }
 
@@ -102,7 +90,7 @@
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
             text = text.replace(/\\n/g, '\n');
-            copyToClipboard(text, 'copyTemplateButton', '✓ Шаблон скопійовано');
+            copyToClipboard(text, '✓ Шаблон скопійовано');
         }
 
         function showCopySuccess(badgeId) {
@@ -142,7 +130,7 @@
 
         function modalCopyContact() {
             if (!currentContactData) return;
-            copyToClipboard(currentContactData.value, 'modalCopyButton', '✓ Скопійовано!', false);
+            copyToClipboard(currentContactData.value, '✓ Скопійовано!');
         }
 
         function modalOpenContact() {
@@ -178,7 +166,7 @@
         function copyTelegramShowcase() {
             const link = getTelegramShowcaseLink();
             if (link) {
-                copyToClipboard(link, 'copyTelegramShowcaseButton', '', true);
+                copyToClipboard(link, '✓ Посилання скопійовано');
                 showCopySuccess('showcaseCopyBadge');
             }
         }
@@ -535,7 +523,6 @@
             color: #1e40af;
         }
 
-        /* Модальне вікно */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -617,19 +604,19 @@
                         <div class="data-block">
                             <div class="data-label">IBAN (<span id="bankName"></span>):</div>
                             <div class="data-value" id="ibanValue"></div>
-                            <button class="copy-button" id="copyIbanButton" onclick="copyIBAN()">Скопіювати IBAN</button>
+                            <button class="copy-button" onclick="copyIBAN()">Скопіювати IBAN</button>
                         </div>
 
                         <div class="data-block">
                             <div class="data-label">ЄДРПОУ:</div>
                             <div class="data-value" id="edrpouValue"></div>
-                            <button class="copy-button" id="copyEdrpouButton" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
+                            <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
                         </div>
 
                         <div class="data-block">
                             <div class="data-label">Призначення платежу:</div>
                             <div class="data-value" id="paymentPurposeValue"></div>
-                            <button class="copy-button" id="copyPurposeButton" onclick="copyPaymentPurpose()">Скопіювати</button>
+                            <button class="copy-button" onclick="copyPaymentPurpose()">Скопіювати</button>
                         </div>
                     </div>
                 </div>
@@ -646,7 +633,7 @@
                         <div class="template-content">
                             <div class="template-text" id="paymentTemplateDisplay"></div>
                         </div>
-                        <button class="copy-button-template" id="copyTemplateButton" onclick="copyPaymentTemplate()">
+                        <button class="copy-button-template" onclick="copyPaymentTemplate()">
                             Скопіювати<br>шаблон
                         </button>
                     </div>
@@ -664,7 +651,6 @@
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <!-- Телеграм -->
                         <div class="contact-item" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
                             <div class="contact-icon">
                                 <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
@@ -686,7 +672,6 @@
                             </div>
                         </div>
 
-                        <!-- Вайбер -->
                         <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
                             <div class="contact-icon">
                                 <img src="https://simpleicons.org/icons/viber.svg" width="32" height="32">
@@ -708,8 +693,7 @@
                             </div>
                         </div>
 
-                        <!-- Вітрина -->
-                        <div class="contact-item" id="telegramShowcaseItem" style="display:none;" onclick="showContactModal('Вітрина', 'Телеграм-спільнота', 'telegram')">
+                        <div class="contact-item" id="telegramShowcaseItem" style="display:none;">
                             <div class="contact-icon">
                                 <img src="https://simpleicons.org/icons/telegram.svg" width="32" height="32">
                             </div>
@@ -761,7 +745,6 @@
         </div>
     </div>
 
-    <!-- Модальне вікно -->
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
