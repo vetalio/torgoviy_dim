@@ -21,6 +21,7 @@
         const PAYMENT_PURPOSE = "Оплата за товари";
         const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
+        const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
         const PAYMENT_OPTIONS = [
             "🔷 Повна передоплата 100%",
             "🔷 Накладений платіж (з передоплатою 200 грн)"
@@ -65,6 +66,10 @@
             copyToClipboard(formatted, '✓ Номер скопійовано');
             showCopySuccess('viberCopyBadge');
         }
+        function copyViberChannel() {
+            copyToClipboard(VIBER_CHANNEL_LINK, '✓ Посилання на канал скопійовано');
+            showCopySuccess('viberChannelCopyBadge');
+        }
         function copyPaymentTemplate() {
             const el = document.getElementById('paymentTemplateDisplay');
             let text = el ? (el.textContent || '') : AFTER_PAYMENT_TEMPLATE;
@@ -79,6 +84,9 @@
                 setTimeout(() => badge.classList.remove('show'), 2000);
             }
         }
+
+        function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
+        function openViberChannel() { window.open(VIBER_CHANNEL_LINK, '_blank'); }
 
         let currentContactData = null;
         function showContactModal(name, value, type) {
@@ -111,12 +119,10 @@
         function modalOpenContact() {
             if (!currentContactData) return;
             if (currentContactData.type === 'viber') {
-                window.location.href = createViberUrl(currentContactData.value);
+                window.open(currentContactData.value, '_blank');
             }
             closeContactModal();
         }
-
-        function openViber() { window.location.href = createViberUrl(VIBER_PHONE); }
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -130,6 +136,7 @@
                 document.getElementById('cardNumberValue').textContent = CARD_NUMBER;
                 document.getElementById('paymentPurposeCardValue').textContent = PAYMENT_PURPOSE;
                 document.getElementById('viberPhone').textContent = formatPhoneNumber(VIBER_PHONE);
+                document.getElementById('viberChannelLink').textContent = "Приєднатися до каналу";
 
                 const templateEl = document.getElementById('paymentTemplateDisplay');
                 if (templateEl) {
@@ -282,7 +289,6 @@
         }
         .copy-button:hover { background: #5c92c4; }
 
-        /* Нова примітка під призначенням платежу */
         .payment-note {
             font-size: 14px;
             color: #d32f2f;
@@ -569,13 +575,14 @@
                     Для TikTok: три крапки → "Відкрити в браузері", щоб кнопки працювали
                 </div>
                 <div style="margin-top: 20px;">
+                    <!-- Особистий чат у Вайбері -->
                     <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
                         <div class="contact-icon">
                             <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
                         </div>
                         <div class="contact-content">
                             <div class="contact-name">
-                                Вайбер
+                                Вайбер (особистий чат)
                                 <span class="copy-success-badge" id="viberCopyBadge">✓ Скопійовано!</span>
                             </div>
                             <div class="contact-value" id="viberPhone"></div>
@@ -585,6 +592,28 @@
                                 <i class="bi bi-box-arrow-up-right"></i>
                             </button>
                             <button class="contact-action-btn" onclick="event.stopPropagation(); copyViberPhone()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Вайбер-канал -->
+                    <div class="contact-item" onclick="showContactModal('Вайбер-спільнота', VIBER_CHANNEL_LINK, 'viber')">
+                        <div class="contact-icon">
+                            <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
+                        </div>
+                        <div class="contact-content">
+                            <div class="contact-name">
+                                Вайбер-спільнота
+                                <span class="copy-success-badge" id="viberChannelCopyBadge">✓ Скопійовано!</span>
+                            </div>
+                            <div class="contact-value" id="viberChannelLink">Приєднатися до каналу</div>
+                        </div>
+                        <div class="contact-actions">
+                            <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openViberChannel()">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
+                            <button class="contact-action-btn" onclick="event.stopPropagation(); copyViberChannel()">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
@@ -628,7 +657,7 @@
             <div class="modal-contact-value" id="modalContactValue"></div>
             <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px;">
                 <button class="modal-action-btn" onclick="modalCopyContact()">Скопіювати</button>
-                <button class="modal-action-btn" onclick="modalOpenContact()">Відкрити в додатку</button>
+                <button class="modal-action-btn" onclick="modalOpenContact()">Відкрити</button>
             </div>
         </div>
     </div>
