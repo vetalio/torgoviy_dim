@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Торговий дім «Домашній Затишок» - Оплата та доставка</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Оптимізація для мобільних -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -21,7 +25,7 @@
         const PAYMENT_PURPOSE = "Оплата за товари";
         const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
-        const PHONE_FOR_CALL = "0687005650"; // Номер для кнопки "Подзвонити"
+        const PHONE_FOR_CALL = "0687005650";
         const VIBER_CHANNEL_LINK = "https://invite.viber.com/?g2=AQBO51L9mwZaAFQcAzVVfMNpxIL%2F43W4g8vNfIWxIpqME3B3sLkGT4owZQjqHgiv";
         const TELEGRAM_USERNAME = "torgoviy_dim_adm";
         const FACEBOOK_GROUP_LINK = "https://www.facebook.com/groups/1490125305479222";
@@ -70,7 +74,7 @@
             showCopySuccess('viberCopyBadge');
         }
         function copyViberChannel() {
-            copyToClipboard(VIBER_CHANNEL_LINK, '✓ Посилання на канал скопійовано');
+            copyToClipboard(VIBER_CHANNEL_LINK, '✓ Посилання скопійовано');
             showCopySuccess('viberChannelCopyBadge');
         }
         function copyTelegramUsername() {
@@ -78,7 +82,7 @@
             showCopySuccess('telegramCopyBadge');
         }
         function copyFacebookGroup() {
-            copyToClipboard(FACEBOOK_GROUP_LINK, '✓ Посилання на групу скопійовано');
+            copyToClipboard(FACEBOOK_GROUP_LINK, '✓ Посилання скопійовано');
             showCopySuccess('facebookCopyBadge');
         }
         function copyPaymentTemplate() {
@@ -108,9 +112,9 @@
             document.getElementById('modalMessengerName').textContent = name;
             document.getElementById('modalContactValue').textContent = value;
             const icon = document.getElementById('modalIcon');
-            if (type === 'telegram') icon.innerHTML = '<img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">';
-            else if (type === 'viber') icon.innerHTML = '<img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">';
-            else if (type === 'facebook') icon.innerHTML = '<img src="https://simpleicons.org/icons/facebook.svg" width="36" height="36">';
+            if (type === 'telegram') icon.innerHTML = '<img src="https://simpleicons.org/icons/telegram.svg" width="42" height="42">';
+            else if (type === 'viber') icon.innerHTML = '<img src="https://simpleicons.org/icons/viber.svg" width="42" height="42">';
+            else if (type === 'facebook') icon.innerHTML = '<img src="https://simpleicons.org/icons/facebook.svg" width="42" height="42">';
             const modal = document.getElementById('contactModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('show'), 10);
@@ -190,218 +194,208 @@
             font-family: 'Montserrat', sans-serif;
             background: #F0F8FF;
             color: #444444;
-            line-height: 1.7;
+            line-height: 1.8;
             min-height: 100vh;
-            padding-bottom: 80px; /* Для фіксованої кнопки дзвінка */
+            padding-bottom: 90px; /* Для кнопки дзвінка */
+            -webkit-tap-highlight-color: transparent;
         }
         .container {
             max-width: 100%;
             margin: 0 auto;
             background: #FFFFFF;
-            min-height: 100vh;
         }
         .header {
             background: linear-gradient(to bottom, #A7CDE8, #B8D9F0);
             color: #2c5282;
-            padding: 40px 20px 30px;
+            padding: 48px 20px 36px;
             text-align: center;
-            border-bottom: 4px solid #6FA8DC;
+            border-bottom: 5px solid #6FA8DC;
         }
         .header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .header p {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 500;
         }
 
-        /* Акційний банер */
+        /* Акційний банер — оптимізований для мобільних */
         .promo-banner {
             background: linear-gradient(135deg, #ff6b6b, #ee5a52);
             color: white;
             text-align: center;
-            padding: 16px 20px;
-            font-size: 18px;
+            padding: 20px;
+            font-size: 20px;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(238, 90, 82, 0.3);
-            margin: 0 16px 24px;
-            border-radius: 16px;
+            margin: 16px 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 6px 16px rgba(238, 90, 82, 0.4);
         }
         .promo-banner strong {
-            font-size: 20px;
+            font-size: 24px;
             text-decoration: underline;
         }
 
-        .content { padding: 0 16px 32px; }
+        .content { padding: 0 16px 40px; }
 
         .block-card {
             background: #FFFFFF;
-            border-radius: 24px;
-            padding: 32px;
+            border-radius: 28px;
+            padding: 36px 24px;
             margin-bottom: 32px;
-            box-shadow: 0 8px 28px rgba(111,168,220,0.2);
+            box-shadow: 0 10px 30px rgba(111,168,220,0.25);
             border: 1px solid #d0e4f5;
         }
         .block-title {
             font-family: 'Playfair Display', serif;
-            font-size: 26px;
+            font-size: 30px;
             color: #2c5282;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid #6FA8DC;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 4px solid #6FA8DC;
         }
 
         .sub-block {
             background: #f8fbff;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 32px;
             border: 1px solid #c0d8ec;
-            box-shadow: 0 4px 16px rgba(111,168,220,0.1);
+            box-shadow: 0 6px 20px rgba(111,168,220,0.15);
         }
         .sub-title {
-            font-size: 20px;
+            font-size: 24px;
             color: #2c5282;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             font-weight: 600;
             text-align: center;
         }
 
         .fop-info {
             background: #f0f8ff;
-            border-left: 5px solid #6FA8DC;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 28px;
+            border-left: 6px solid #6FA8DC;
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 32px;
         }
         .fop-name {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 600;
             color: #2c5282;
         }
 
         .data-block {
             background: #f0f8ff;
-            border-radius: 16px;
-            padding: 18px;
-            margin: 16px 0;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
             display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 20px;
             border: 1px solid #c0d8ec;
         }
         .data-label {
-            font-size: 15px;
+            font-size: 18px;
             color: #2c5282;
             font-weight: 600;
         }
         .data-value {
-            font-size: 16px;
+            font-size: 22px;
             font-weight: 600;
             color: #444444;
             word-break: break-all;
-            flex: 1;
-            min-width: 200px;
         }
         .copy-button {
             background: #6FA8DC;
             color: white;
             border: none;
-            padding: 14px 24px;
-            border-radius: 16px;
+            padding: 18px;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 18px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
-            min-width: 140px;
+            box-shadow: 0 6px 16px rgba(111,168,220,0.4);
+            align-self: center;
+            min-width: 100%;
         }
         .copy-button:hover { background: #5c92c4; }
 
         .payment-note {
-            font-size: 14px;
+            font-size: 17px;
             color: #d32f2f;
-            font-weight: 600;
+            font-weight: 700;
             text-align: center;
-            margin-top: 12px;
-            padding: 10px;
+            margin-top: 20px;
+            padding: 16px;
             background: #ffebee;
-            border-radius: 12px;
-            border: 1px solid #ffcdd2;
+            border-radius: 16px;
+            border: 2px solid #ffcdd2;
         }
 
         .template-container {
             display: flex;
-            gap: 16px;
-            align-items: stretch;
-            margin: 28px 0;
+            flex-direction: column;
+            gap: 20px;
+            margin: 32px 0;
         }
         .template-content {
             background: #f0f8ff;
-            padding: 24px;
-            border-radius: 16px;
-            border-left: 5px solid #6FA8DC;
-            flex: 1;
+            padding: 28px;
+            border-radius: 20px;
+            border-left: 6px solid #6FA8DC;
         }
         .template-text {
-            font-size: 16px;
-            line-height: 1.9;
+            font-size: 20px;
+            line-height: 2;
             white-space: pre-line;
             color: #2c5282;
         }
         .copy-button-template {
             background: #6FA8DC;
             color: white;
-            padding: 16px;
-            border-radius: 16px;
+            padding: 20px;
+            border-radius: 20px;
             font-weight: 600;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-width: 120px;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.3);
-            font-size: 14px;
+            font-size: 18px;
+            box-shadow: 0 6px 16px rgba(111,168,220,0.4);
+            text-align: center;
         }
-        .copy-button-template:hover { background: #5c92c4; }
 
         .payment-option, .delivery-list li {
             background: #f0f8ff;
-            padding: 18px;
-            border-radius: 16px;
-            border-left: 4px solid #6FA8DC;
-            font-size: 16px;
-            margin-bottom: 12px;
+            padding: 24px;
+            border-radius: 20px;
+            border-left: 5px solid #6FA8DC;
+            font-size: 20px;
+            margin-bottom: 16px;
         }
 
         .contact-item {
             background: #f0f8ff;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
-            border-left: 5px solid #6FA8DC;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 24px;
+            border-left: 6px solid #6FA8DC;
             display: flex;
             align-items: center;
-            gap: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.1);
+            gap: 24px;
+            box-shadow: 0 6px 20px rgba(111,168,220,0.15);
         }
         .contact-icon {
             background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.1);
+            box-shadow: 0 6px 16px rgba(111,168,220,0.2);
             flex-shrink: 0;
         }
         .contact-content {
@@ -410,84 +404,83 @@
         .contact-name {
             font-weight: 600;
             color: #2c5282;
-            font-size: 19px;
+            font-size: 22px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 8px;
         }
         .copy-success-badge {
             display: none;
             background: #5c92c4;
             color: white;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 600;
         }
         .copy-success-badge.show { display: inline-block; }
         .contact-value {
             font-weight: 600;
             color: #444444;
-            font-size: 21px;
-            margin-top: 8px;
-            word-break: break-all;
+            font-size: 26px;
         }
         .contact-actions {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 20px;
         }
         .contact-action-btn {
             background: #6FA8DC;
             color: white;
             border: none;
-            width: 56px;
-            height: 56px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(111,168,220,0.4);
-            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(111,168,220,0.5);
+            font-size: 32px;
         }
         .contact-action-btn:hover {
             background: #5c92c4;
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         .contact-open-btn {
             background: #5c92c4;
         }
-        .contact-open-btn:hover { background: #4a7eb0; }
 
         .tiktok-instruction {
             background: #e6f3ff;
-            border: 1px solid #A7CDE8;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
-            font-size: 15px;
+            border: 2px solid #A7CDE8;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+            font-size: 18px;
             color: #2c5282;
             text-align: center;
+            font-weight: 600;
         }
 
         .footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 48px 24px;
             color: #2c5282;
-            font-size: 17px;
+            font-size: 20px;
             background: #e6f3ff;
-            border-top: 3px solid #6FA8DC;
+            border-top: 4px solid #6FA8DC;
         }
         .footer em {
             font-style: italic;
-            font-size: 18px;
+            font-size: 22px;
             display: block;
-            margin-top: 12px;
+            margin-top: 16px;
             color: #1e40af;
         }
 
-        /* Фіксована кнопка "Подзвонити" */
+        /* Кнопка "Подзвонити" */
         .call-button {
             position: fixed;
             bottom: 20px;
@@ -495,68 +488,74 @@
             transform: translateX(-50%);
             background: #28a745;
             color: white;
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            font-size: 36px;
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.5);
             z-index: 1000;
             transition: all 0.3s ease;
         }
         .call-button:hover {
             background: #218838;
-            transform: translateX(-50%) scale(1.1);
-        }
-        @media (min-width: 768px) {
-            .call-button { display: none; } /* Ховаємо на десктопі */
+            transform: translateX(-50%) scale(1.15);
         }
 
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 20px;
         }
         .modal-content {
             background: white;
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 90%;
-            width: 340px;
-            box-shadow: 0 10px 40px rgba(111,168,220,0.3);
+            border-radius: 28px;
+            padding: 40px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 12px 40px rgba(111,168,220,0.4);
         }
         .modal-contact-value {
             background: #f0f8ff;
-            padding: 24px;
-            border-radius: 18px;
-            font-size: 18px;
+            padding: 32px;
+            border-radius: 24px;
+            font-size: 24px;
             font-weight: 600;
             color: #444444;
             text-align: center;
-            border: 2px dashed #6FA8DC;
+            border: 3px dashed #6FA8DC;
+            word-break: break-all;
         }
         .modal-action-btn {
             background: #6FA8DC;
-            border-radius: 18px;
-            padding: 18px;
+            border-radius: 24px;
+            padding: 22px;
             font-weight: 600;
             color: white;
-            font-size: 16px;
+            font-size: 20px;
+            margin-top: 16px;
         }
         .modal-action-btn:hover { background: #5c92c4; }
 
+        /* Додаткові мобільні оптимізації */
         @media (max-width: 480px) {
-            .block-title { font-size: 24px; }
-            .sub-title { font-size: 19px; }
-            .contact-value { font-size: 22px; }
-            .promo-banner { font-size: 16px; margin: 0 8px 20px; padding: 14px; }
-            .promo-banner strong { font-size: 18px; }
+            .header { padding: 44px 16px 32px; }
+            .header h1 { font-size: 30px; }
+            .header p { font-size: 19px; }
+            .promo-banner { font-size: 18px; padding: 18px; margin: 12px 12px 24px; }
+            .promo-banner strong { font-size: 22px; }
+            .block-title { font-size: 28px; }
+            .sub-title { font-size: 22px; }
+            .data-value, .contact-value { font-size: 24px; }
+            .copy-button, .copy-button-template { font-size: 19px; padding: 20px; }
+            .contact-action-btn { width: 76px; height: 76px; font-size: 36px; }
         }
     </style>
 </head>
@@ -573,14 +572,13 @@
         </div>
 
         <div class="content">
-            <!-- Блок 1: Реквізити для оплати -->
+            <!-- Реквізити -->
             <div class="block-card">
                 <div class="block-title">💳 Реквізити для оплати</div>
                 <div class="fop-info">
                     <div class="fop-name" id="fopName"></div>
                 </div>
 
-                <!-- Підблок: Оплата за номером карти -->
                 <div class="sub-block">
                     <div class="sub-title">Оплата за номером карти (Монобанк)</div>
                     <div class="data-block">
@@ -594,11 +592,10 @@
                         <button class="copy-button" onclick="copyPaymentPurposeCard()">Скопіювати</button>
                     </div>
                     <div class="payment-note">
-                        ⚠️ Обов’язково вкажіть у призначенні платежу: <strong>Оплата за товари</strong>
+                        ⚠️ Обов’язково вкажіть: <strong>Оплата за товари</strong>
                     </div>
                 </div>
 
-                <!-- Підблок: Оплата за реквізитами -->
                 <div class="sub-block">
                     <div class="sub-title">Оплата за реквізитами</div>
                     <div class="data-block">
@@ -609,7 +606,7 @@
                     <div class="data-block">
                         <div class="data-label">ІПН/ЄДРПОУ:</div>
                         <div class="data-value" id="edrpouValue"></div>
-                        <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ІПН/ЄДРПОУ</button>
+                        <button class="copy-button" onclick="copyEDRPOU()">Скопіювати</button>
                     </div>
                     <div class="data-block">
                         <div class="data-label">Призначення платежу:</div>
@@ -617,41 +614,40 @@
                         <button class="copy-button" onclick="copyPaymentPurpose()">Скопіювати</button>
                     </div>
                     <div class="payment-note">
-                        ⚠️ Обов’язково вкажіть у призначенні платежу: <strong>Оплата за товари</strong>
+                        ⚠️ Обов’язково вкажіть: <strong>Оплата за товари</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- Блок 2: Після оплати -->
+            <!-- Після оплати -->
             <div class="block-card">
                 <div class="block-title">📦 Після оплати</div>
-                <p style="margin-bottom: 24px; font-size: 16px;">Надішліть скріншот оплати та заповнений шаблон:</p>
+                <p style="margin-bottom: 32px; font-size: 20px;">Надішліть скріншот оплати та заповнений шаблон:</p>
                 <div class="template-container">
                     <div class="template-content">
                         <div class="template-text" id="paymentTemplateDisplay"></div>
                     </div>
                     <button class="copy-button-template" onclick="copyPaymentTemplate()">
-                        Скопіювати<br>шаблон
+                        Скопіювати шаблон
                     </button>
                 </div>
             </div>
 
-            <!-- Блок 3: Зв'язок з нами -->
+            <!-- Зв'язок з нами -->
             <div class="block-card">
                 <div class="block-title">📞 Зв'язок з нами</div>
                 <div class="tiktok-instruction">
                     Для TikTok: три крапки → "Відкрити в браузері", щоб кнопки працювали
                 </div>
-                <div style="margin-top: 20px;">
-                    <!-- Телеграм -->
+                <div style="margin-top: 24px;">
                     <div class="contact-item" onclick="showContactModal('Телеграм', '@' + TELEGRAM_USERNAME, 'telegram')">
                         <div class="contact-icon">
-                            <img src="https://simpleicons.org/icons/telegram.svg" width="36" height="36">
+                            <img src="https://simpleicons.org/icons/telegram.svg" width="42" height="42">
                         </div>
                         <div class="contact-content">
                             <div class="contact-name">
-                                Телеграм (особистий чат)
-                                <span class="copy-success-badge" id="telegramCopyBadge">✓ Скопійовано!</span>
+                                Телеграм
+                                <span class="copy-success-badge" id="telegramCopyBadge">✓</span>
                             </div>
                             <div class="contact-value" id="telegramUsername"></div>
                         </div>
@@ -665,15 +661,14 @@
                         </div>
                     </div>
 
-                    <!-- Вайбер чат -->
                     <div class="contact-item" onclick="showContactModal('Вайбер', formatPhoneNumber(VIBER_PHONE), 'viber')">
                         <div class="contact-icon">
-                            <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
+                            <img src="https://simpleicons.org/icons/viber.svg" width="42" height="42">
                         </div>
                         <div class="contact-content">
                             <div class="contact-name">
-                                Вайбер (особистий чат)
-                                <span class="copy-success-badge" id="viberCopyBadge">✓ Скопійовано!</span>
+                                Вайбер (чат)
+                                <span class="copy-success-badge" id="viberCopyBadge">✓</span>
                             </div>
                             <div class="contact-value" id="viberPhone"></div>
                         </div>
@@ -687,17 +682,16 @@
                         </div>
                     </div>
 
-                    <!-- Вайбер-спільнота -->
                     <div class="contact-item" onclick="showContactModal('Вайбер-спільнота', VIBER_CHANNEL_LINK, 'viber')">
                         <div class="contact-icon">
-                            <img src="https://simpleicons.org/icons/viber.svg" width="36" height="36">
+                            <img src="https://simpleicons.org/icons/viber.svg" width="42" height="42">
                         </div>
                         <div class="contact-content">
                             <div class="contact-name">
                                 Вайбер-спільнота
-                                <span class="copy-success-badge" id="viberChannelCopyBadge">✓ Скопійовано!</span>
+                                <span class="copy-success-badge" id="viberChannelCopyBadge">✓</span>
                             </div>
-                            <div class="contact-value" id="viberChannelLink">Приєднатися до каналу</div>
+                            <div class="contact-value" id="viberChannelLink">Приєднатися</div>
                         </div>
                         <div class="contact-actions">
                             <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openViberChannel()">
@@ -709,17 +703,16 @@
                         </div>
                     </div>
 
-                    <!-- Facebook-група -->
                     <div class="contact-item" onclick="showContactModal('Facebook-група', FACEBOOK_GROUP_LINK, 'facebook')">
                         <div class="contact-icon">
-                            <img src="https://simpleicons.org/icons/facebook.svg" width="36" height="36">
+                            <img src="https://simpleicons.org/icons/facebook.svg" width="42" height="42">
                         </div>
                         <div class="contact-content">
                             <div class="contact-name">
                                 Facebook-група
-                                <span class="copy-success-badge" id="facebookCopyBadge">✓ Скопійовано!</span>
+                                <span class="copy-success-badge" id="facebookCopyBadge">✓</span>
                             </div>
-                            <div class="contact-value" id="facebookGroupLink">Приєднатися до групи</div>
+                            <div class="contact-value" id="facebookGroupLink">Приєднатися</div>
                         </div>
                         <div class="contact-actions">
                             <button class="contact-action-btn contact-open-btn" onclick="event.stopPropagation(); openFacebookGroup()">
@@ -733,20 +726,20 @@
                 </div>
             </div>
 
-            <!-- Блок 4: Умови оплати та доставки -->
+            <!-- Умови -->
             <div class="block-card">
                 <div class="block-title">📄 Умови оплати та доставки</div>
-                <h3 style="color: #2c5282; margin: 24px 0 16px; font-size: 18px;">Оплата</h3>
+                <h3 style="color: #2c5282; margin: 32px 0 20px; font-size: 24px;">Оплата</h3>
                 <div class="payment-options" id="paymentOptions"></div>
 
-                <h3 style="color: #2c5282; margin: 32px 0 16px; font-size: 18px;">Доставка</h3>
+                <h3 style="color: #2c5282; margin: 40px 0 20px; font-size: 24px;">Доставка</h3>
                 <ul class="delivery-list">
                     <li><strong>Спосіб:</strong> <span id="deliveryMethod"></span></li>
                     <li><strong>Термін:</strong> <span id="deliveryTime"></span></li>
                     <li><strong>Примітка:</strong> <span id="deliveryNote"></span></li>
                 </ul>
 
-                <h3 style="color: #2c5282; margin: 32px 0 16px; font-size: 18px;">Обмін та повернення</h3>
+                <h3 style="color: #2c5282; margin: 40px 0 20px; font-size: 24px;">Обмін та повернення</h3>
                 <ul id="exchangeReturnList"></ul>
             </div>
 
@@ -757,22 +750,23 @@
         </div>
     </div>
 
-    <!-- Фіксована кнопка "Подзвонити" (тільки на мобільних) -->
-    <a href="tel:+380687005650" class="call-button" onclick="callPhone()">
+    <!-- Кнопка "Подзвонити" -->
+    <a href="tel:+380687005650" class="call-button">
         <i class="bi bi-telephone-fill"></i>
     </a>
 
+    <!-- Модальне вікно -->
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
                     <div id="modalIcon"></div>
-                    <h3 id="modalMessengerName" style="margin:0; font-size:20px;"></h3>
+                    <h3 id="modalMessengerName" style="margin:0; font-size:26px;"></h3>
                 </div>
-                <button style="background:none;border:none;font-size:32px;color:#6FA8DC;cursor:pointer;" onclick="closeContactModal()">×</button>
+                <button style="background:none;border:none;font-size:40px;color:#6FA8DC;cursor:pointer;" onclick="closeContactModal()">×</button>
             </div>
             <div class="modal-contact-value" id="modalContactValue"></div>
-            <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 20px;">
                 <button class="modal-action-btn" onclick="modalCopyContact()">Скопіювати</button>
                 <button class="modal-action-btn" onclick="modalOpenContact()">Відкрити</button>
             </div>
