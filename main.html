@@ -16,10 +16,10 @@
         const SHOP_SLOGAN = "Товари для дому з турботою про вас";
         const FOP_NAME = "ФОП Матяш Тетяна Іванівна";
         const EDRPOU = "3657909828";
-        const IBAN = "UA513220010000026006370004597";
+        const IBAN = "UA753220010000026001370036054";
         const BANK_NAME = "Монобанк";
         const PAYMENT_PURPOSE = "Оплата за товари";
-        const CARD_NUMBER = "5168757243101547";
+        const CARD_NUMBER = "5408810042153642";
         const VIBER_PHONE = "0687005650";
         const PAYMENT_OPTIONS = [
             "🔷 Повна передоплата 100%",
@@ -282,6 +282,19 @@
         }
         .copy-button:hover { background: #5c92c4; }
 
+        /* Нова примітка під призначенням платежу */
+        .payment-note {
+            font-size: 14px;
+            color: #d32f2f;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 12px;
+            padding: 10px;
+            background: #ffebee;
+            border-radius: 12px;
+            border: 1px solid #ffcdd2;
+        }
+
         .template-container {
             display: flex;
             gap: 16px;
@@ -506,6 +519,9 @@
                         <div class="data-value" id="paymentPurposeCardValue"></div>
                         <button class="copy-button" onclick="copyPaymentPurposeCard()">Скопіювати</button>
                     </div>
+                    <div class="payment-note">
+                        ⚠️ Обов’язково вкажіть у призначенні платежу: <strong>Оплата за товари</strong>
+                    </div>
                 </div>
 
                 <!-- Підблок: Оплата за реквізитами -->
@@ -517,14 +533,17 @@
                         <button class="copy-button" onclick="copyIBAN()">Скопіювати IBAN</button>
                     </div>
                     <div class="data-block">
-                        <div class="data-label">ЄДРПОУ:</div>
+                        <div class="data-label">ІПН/ЄДРПОУ:</div>
                         <div class="data-value" id="edrpouValue"></div>
-                        <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ЄДРПОУ</button>
+                        <button class="copy-button" onclick="copyEDRPOU()">Скопіювати ІПН/ЄДРПОУ</button>
                     </div>
                     <div class="data-block">
                         <div class="data-label">Призначення платежу:</div>
                         <div class="data-value" id="paymentPurposeValue"></div>
                         <button class="copy-button" onclick="copyPaymentPurpose()">Скопіювати</button>
+                    </div>
+                    <div class="payment-note">
+                        ⚠️ Обов’язково вкажіть у призначенні платежу: <strong>Оплата за товари</strong>
                     </div>
                 </div>
             </div>
